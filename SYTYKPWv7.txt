@@ -1,0 +1,359 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary)}
+.wrap{max-width:640px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.header{text-align:center;padding:1.5rem 0 1.25rem;background:linear-gradient(135deg,#534AB7 0%,#185FA5 50%,#0F6E56 100%);border-radius:var(--border-radius-lg);margin-bottom:1.5rem;color:#fff}
+.header h1{font-size:22px;font-weight:500;margin-bottom:6px;color:#fff}
+.header p{font-size:13px;color:rgba(255,255,255,0.8)}
+.progress-bar{background:var(--color-background-secondary);border-radius:999px;height:8px;margin-bottom:1.5rem;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#534AB7,#185FA5,#1D9E75);border-radius:999px;transition:width .4s ease}
+.q-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+.q-label{font-size:12px;color:var(--color-text-secondary);font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.timer-wrap{display:flex;align-items:center;gap:8px}
+.timer-num{font-size:13px;font-weight:500;min-width:22px;text-align:right}
+.timer-track{width:80px;height:6px;background:var(--color-background-secondary);border-radius:999px;overflow:hidden}
+.timer-fill{height:100%;border-radius:999px;transition:width .95s linear,background .3s}
+.timer-green{background:#639922}.timer-amber{background:#BA7517}.timer-red{background:#E24B4A}
+.q-text{font-size:17px;font-weight:500;line-height:1.5;margin-bottom:1.25rem}
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.25rem}
+.opt{padding:.75rem 1rem;border-radius:var(--border-radius-lg);cursor:pointer;font-size:15px;text-align:left;transition:all .15s;font-weight:400;border:2px solid transparent}
+.opt-A{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
+.opt-A:hover:not(:disabled){background:#CECBF6;border-color:#7F77DD}
+.opt-B{background:#E1F5EE;color:#085041;border-color:#5DCAA5}
+.opt-B:hover:not(:disabled){background:#9FE1CB;border-color:#1D9E75}
+.opt-C{background:#FAEEDA;color:#633806;border-color:#EF9F27}
+.opt-C:hover:not(:disabled){background:#FAC775;border-color:#BA7517}
+.opt-D{background:#FBEAF0;color:#4B1528;border-color:#ED93B1}
+.opt-D:hover:not(:disabled){background:#F4C0D1;border-color:#D4537E}
+.opt.correct{background:#639922!important;border-color:#3B6D11!important;color:#fff!important}
+.opt.wrong{background:#E24B4A!important;border-color:#A32D2D!important;color:#fff!important}
+.opt.reveal-correct{background:#639922!important;border-color:#3B6D11!important;color:#fff!important}
+.opt:disabled{cursor:default;opacity:.85}
+.feedback{padding:.875rem 1rem;border-radius:var(--border-radius-md);font-size:14px;line-height:1.6;margin-bottom:1.25rem;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:#EAF3DE;color:#27500A;border-left:4px solid #639922}
+.feedback.wrong{background:#FCEBEB;color:#501313;border-left:4px solid #E24B4A}
+.feedback .verdict{font-weight:500;margin-bottom:4px;font-size:15px}
+.next-btn{width:100%;padding:.75rem;border-radius:var(--border-radius-lg);border:none;background:linear-gradient(90deg,#534AB7,#185FA5);color:#fff;font-size:15px;font-weight:500;cursor:pointer;display:none}
+.next-btn.show{display:block}
+.next-btn:hover{opacity:.9}
+.cat-tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:middle}
+.cat-SCA{background:#EEEDFE;color:#3C3489}
+.cat-DBA{background:#E1F5EE;color:#085041}
+.cat-Fringe{background:#FAEEDA;color:#633806}
+.cat-Audit{background:#FBEAF0;color:#4B1528}
+.cat-State{background:#E6F1FB;color:#0C447C}
+.opt-letter{display:inline-block;width:22px;height:22px;border-radius:50%;font-size:12px;font-weight:500;text-align:center;line-height:22px;margin-right:10px;flex-shrink:0}
+.opt-inner{display:flex;align-items:center}
+.opt-A .opt-letter{background:#7F77DD;color:#fff}
+.opt-B .opt-letter{background:#1D9E75;color:#fff}
+.opt-C .opt-letter{background:#BA7517;color:#fff}
+.opt-D .opt-letter{background:#D4537E;color:#fff}
+.opt.correct .opt-letter,.opt.wrong .opt-letter,.opt.reveal-correct .opt-letter{background:rgba(255,255,255,0.3);color:#fff}
+.score-screen{text-align:center;padding:2rem 0}
+.trophy{font-size:64px;margin-bottom:1rem}
+.score-ring{width:120px;height:120px;border-radius:50%;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(135deg,#534AB7,#1D9E75);color:#fff}
+.score-num{font-size:36px;font-weight:500;line-height:1}
+.score-denom{font-size:12px;opacity:.85}
+.score-pct{font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem}
+.tier-badge{display:inline-block;padding:.45rem 1.25rem;border-radius:999px;font-size:15px;font-weight:500;margin-bottom:1.25rem;color:#fff}
+.tier-msg{font-size:15px;color:var(--color-text-secondary);line-height:1.6;max-width:400px;margin:0 auto 1.5rem}
+.name-entry{margin:0 auto 1.5rem;max-width:320px}
+.name-entry label{display:block;font-size:13px;font-weight:500;margin-bottom:6px;color:var(--color-text-secondary)}
+.name-entry input{width:100%;padding:.6rem .875rem;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);font-size:15px;background:var(--color-background-primary);color:var(--color-text-primary)}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.btn-primary{padding:.65rem 1.5rem;border-radius:var(--border-radius-lg);border:none;background:linear-gradient(90deg,#534AB7,#185FA5);color:#fff;font-size:15px;cursor:pointer}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{padding:.65rem 1.5rem;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);font-size:15px;cursor:pointer;color:var(--color-text-primary)}
+.btn-secondary:hover{background:var(--color-border-tertiary)}
+.lb-screen{padding:1rem 0}
+.lb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.lb-header h2{font-size:18px;font-weight:500}
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-align:left;padding:6px 10px;border-bottom:0.5px solid var(--color-border-secondary);text-transform:uppercase;letter-spacing:.05em}
+.lb-table td{padding:10px;font-size:14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.lb-table tr:last-child td{border-bottom:none}
+.lb-table tr.highlight td{background:var(--color-background-secondary);font-weight:500}
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-size:13px;font-weight:500;color:#fff}
+.rank-1{background:linear-gradient(135deg,#BA7517,#EF9F27)}
+.rank-2{background:linear-gradient(135deg,#5F5E5A,#B4B2A9)}
+.rank-3{background:linear-gradient(135deg,#993C1D,#D85A30)}
+.rank-n{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.tier-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500;color:#fff}
+.empty-state{text-align:center;padding:2rem 0;color:var(--color-text-secondary);font-size:14px}
+.loading{text-align:center;padding:1.5rem;color:var(--color-text-secondary);font-size:14px}
+</style>
+
+<div class="wrap">
+  <div id="name-screen" style="display:none;text-align:center;padding:3rem 0">
+    <div style="font-size:48px;margin-bottom:1rem">🏗️</div>
+    <h1 style="font-size:22px;font-weight:500;margin-bottom:.5rem">So You Think You Know Prevailing Wage?</h1>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:2rem">20 questions · SCA · DBA · State Laws · Fringe Benefits · Audits</p>
+    <div class="name-entry">
+      <label>Enter your name to get started</label>
+      <input type="text" id="player-name" placeholder="Your name" maxlength="30" />
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="startQuiz()">Start quiz →</button>
+      <button class="btn-secondary" onclick="showLeaderboard()">View leaderboard</button>
+    </div>
+  </div>
+
+  <div id="quiz-main" style="display:none">
+    <div class="header">
+      <h1>So You Think You Know Prevailing Wage? 🏗️</h1>
+      <p>20 questions · SCA · DBA · State Laws · Fringe Benefits · Audits</p>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    <div class="q-meta">
+      <div class="q-label" id="q-label">Question 1 of 20</div>
+      <div class="timer-wrap">
+        <div class="timer-track"><div class="timer-fill timer-green" id="timer-fill" style="width:100%"></div></div>
+        <span class="timer-num" id="timer-num">20</span>
+      </div>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"><div class="verdict" id="verdict"></div><div id="explanation"></div></div>
+    <button class="next-btn" id="next-btn">Next question →</button>
+  </div>
+
+  <div id="score-screen" class="score-screen" style="display:none"></div>
+
+  <div id="lb-screen" class="lb-screen" style="display:none">
+    <div class="lb-header">
+      <h2>Leaderboard 🏆</h2>
+      <button class="btn-secondary" onclick="showNameScreen()" style="font-size:13px;padding:.4rem 1rem">← Back</button>
+    </div>
+    <div id="lb-content"><div class="loading">Loading scores...</div></div>
+  </div>
+</div>
+
+<script>
+const LETTERS=['A','B','C','D'];
+const OPT_CLASSES=['opt-A','opt-B','opt-C','opt-D'];
+const CAT_MAP={'SCA':'cat-SCA','DBA':'cat-DBA','Fringe Benefits':'cat-Fringe','Audit':'cat-Audit','State PW':'cat-State'};
+
+const ALL_Q=[
+  {cat:"DBA",q:"The Davis-Bacon Act applies to federal or federally assisted construction contracts above which dollar threshold?",opts:["$2,500","$2,000","$100,000","No minimum — all construction"],ans:1,exp:"The Davis-Bacon Act applies to contracts for construction, alteration, or repair of public buildings or public works where the contract exceeds $2,000. The $15,000 threshold applies to the Davis-Bacon Related Acts in some contexts, but the base DBA threshold is $2,000."},
+  {cat:"DBA",q:"Under DBA, certified payroll reports must be submitted using which form?",opts:["WH-347","WH-380","SF-1199A","DD-250"],ans:0,exp:"Form WH-347 is the standard certified payroll report form used to demonstrate compliance with DBA wage requirements. Contractors must submit it weekly and certify that workers were paid the applicable prevailing wages."},
+  {cat:"DBA",q:"A subcontractor on a DBA-covered project fails to pay prevailing wages. Who bears ultimate liability?",opts:["The subcontractor only","The prime contractor only","Both the prime and the subcontractor can be held liable","The contracting agency"],ans:2,exp:"Under DBA, the prime contractor is responsible for ensuring all subcontractors on the project comply with prevailing wage requirements. Both prime and sub can face liability — which is why strong flow-down language in subcontracts and payroll monitoring are essential."},
+  {cat:"SCA",q:"Under the Service Contract Act, which contract threshold generally triggers wage and fringe benefit requirements?",opts:["$1,000","$2,500","$5,000","$10,000"],ans:1,exp:"The SCA applies to federal service contracts exceeding $2,500. Below that threshold, contractors are still required to pay minimum wage but don't face the full wage determination and fringe benefit requirements."},
+  {cat:"SCA",q:"Which federal agency is primarily responsible for enforcing the Service Contract Act?",opts:["OFCCP","EEOC","DOL Wage and Hour Division","GSA"],ans:2,exp:"The Department of Labor's Wage and Hour Division (WHD) enforces the SCA, DBA, and most related prevailing wage laws. OFCCP handles affirmative action, and EEOC handles discrimination — different lanes entirely."},
+  {cat:"SCA",q:"An SCA wage determination lists a classification not already on the WD. What must the contractor do?",opts:["Pay whatever the market bears","Submit a conformance request to the DOL before or shortly after work begins","Use the closest listed classification rate","Apply for an SCA exemption"],ans:1,exp:"When a classification isn't listed on a WD, contractors must submit a conformance request to the DOL Wage and Hour Division before or soon after work begins. Paying an unlisted rate without conformance approval is a compliance violation."},
+  {cat:"Fringe Benefits",q:"Under the SCA, an employer may satisfy the fringe benefit obligation by doing which of the following?",opts:["Paying all fringe amounts as cash added to hourly wage","Only contributing to a bona fide benefit plan","Either cash in lieu OR a bona fide benefit plan — or a combination","Applying fringe as an offset against overtime premiums"],ans:2,exp:"SCA allows employers to satisfy fringe obligations by: (1) providing bona fide fringe benefits, (2) paying the equivalent in cash, or (3) a combination of both. Fringe cannot be used to offset overtime premiums — that's a common compliance mistake."},
+  {cat:"Fringe Benefits",q:"An employee works 50 hours in a week on an SCA contract. The WD requires $5.00/hr in fringe. How many hours does the fringe obligation cover?",opts:["40 hours only","50 hours — all hours worked","45 hours","It depends on the benefit plan"],ans:0,exp:"SCA fringe benefit obligations apply to all hours up to 40 per week (straight time only). Fringe is NOT required on overtime hours. This is a frequently misunderstood rule that catches contractors off guard."},
+  {cat:"Audit",q:"During a prevailing wage audit, which document is typically the FIRST requested to verify compliance?",opts:["Employee W-2s","Certified payroll reports","Time and attendance records","Union contract"],ans:1,exp:"Certified payroll reports (CPRs) are the primary compliance document and the first item requested in most prevailing wage audits. From there, auditors typically cross-reference CPRs against time records, benefit statements, and fringe benefit plan documents."},
+  {cat:"Audit",q:"An auditor finds that a worker was misclassified at a lower-wage classification for 6 months. What is the likely remedy?",opts:["A written warning only","Back wages for the difference, plus potential debarment","Immediate contract termination","The worker must file a separate lawsuit — the agency has no remedy"],ans:1,exp:"Misclassification resulting in underpayment triggers back wage liability for the difference between what was paid and what was owed. Repeated or willful violations can lead to debarment — meaning the contractor is prohibited from future federal contracts for up to 3 years."},
+  {cat:"State PW",q:"California's prevailing wage law is administered by which agency?",opts:["California Labor Commissioner","California DIR — Division of Labor Standards Enforcement","California Franchise Tax Board","California Department of Industrial Relations — Public Works Unit"],ans:3,exp:"California's Department of Industrial Relations (DIR) administers prevailing wage on public works through its Public Works Unit. Contractors must also register with the DIR's Public Works Contractor Registration program (PWCR) before bidding on covered projects."},
+  {cat:"State PW",q:"Which of the following states has NO state prevailing wage law?",opts:["Texas","New York","Illinois","Washington"],ans:0,exp:"Texas does not have a state prevailing wage law. It repealed its Little Davis-Bacon Act in 1995. New York, Illinois, and Washington all have robust state prevailing wage laws with thresholds and requirements that can exceed federal DBA."},
+  {cat:"State PW",q:"Many state prevailing wage laws have lower contract thresholds than the federal DBA $2,000 minimum. Why does this matter?",opts:["More contracts are covered at the state level than federal","It only matters for private construction","Lower thresholds apply only to contracts over $1 million","Thresholds are irrelevant — states always follow federal rules"],ans:0,exp:"State prevailing wage laws can set lower thresholds, meaning a project that falls below the federal DBA threshold may still require prevailing wages under state law. Contractors working on state-funded or state-assisted projects must always check applicable state thresholds."},
+  {cat:"State PW",q:"A contractor performs work on a project jointly funded by federal and California state money. Which prevailing wage rules apply?",opts:["Only federal DBA — federal law preempts state","Only California DIR rules","Both apply — whichever is MORE beneficial to the worker governs","The contractor chooses which standard to follow"],ans:2,exp:"When both federal and state prevailing wage laws apply to the same project, the contractor must comply with BOTH — and where they differ, the more protective (worker-favorable) standard governs. This is a core principle in federal-state prevailing wage compliance."},
+  {cat:"State PW",q:"New York's prevailing wage law for building service contracts is known as the:",opts:["Empire State Labor Act","New York Labor Law Article 9","New York Public Works Act","New York Service Employees Protection Act"],ans:1,exp:"New York Labor Law Article 9 covers prevailing wage requirements for building service workers on covered contracts. It parallels the federal SCA but applies to state-funded service contracts and can require higher wages than the federal standard."},
+  {cat:"State PW",q:"Illinois requires contractors to submit certified payroll records for prevailing wage projects to which entity?",opts:["The Illinois DOL only","The contracting public body","The federal DOL","Directly to affected workers"],ans:1,exp:"Under the Illinois Prevailing Wage Act, contractors must submit certified payroll records to the public body (the contracting agency) that let the contract. The public body is responsible for keeping records available for inspection."},
+  {cat:"State PW",q:"Most state prevailing wage laws apply to which type of project?",opts:["All private construction","Public works — projects funded or assisted by state or local government","Only federally funded projects","Only projects over $1 million"],ans:1,exp:"State prevailing wage laws — often called 'Little Davis-Bacon' acts — generally apply to public works projects funded or assisted by state or local government dollars. The specific definitions of 'public works' vary by state but the public funding trigger is the common thread."},
+  {cat:"State PW",q:"When a state prevailing wage rate is higher than the federal DBA rate for the same work, what must a contractor pay?",opts:["The federal rate — federal law always controls","The state rate — whichever is higher protects the worker","They may choose either rate","The rates must be averaged"],ans:1,exp:"When both federal and state prevailing wage laws apply and the rates differ, the contractor must pay the higher of the two rates. The more protective (worker-favorable) standard always governs on dual-coverage projects."},
+  {cat:"State PW",q:"A contractor headquartered in one state wins a public works contract in another state. Whose prevailing wage rates apply?",opts:["The contractor's home state rates","The project state's rates","Federal DBA rates always apply across state lines","Whichever state has lower rates"],ans:1,exp:"Prevailing wage rates are site-of-work based, not tied to where the contractor is headquartered. The rates for the state and locality where the work is physically performed always apply."},
+  {cat:"State PW",q:"Which of the following is a common penalty for state prevailing wage violations?",opts:["A verbal warning only","Back wages, civil penalties, and potential contractor debarment","Mandatory union membership","Loss of business license in all 50 states"],ans:1,exp:"State prevailing wage violations typically result in back wage assessments, civil penalties, and — for repeat or willful offenders — debarment from future public works contracts in that state. The specifics vary, but the back wages + penalty combination is nearly universal."},
+];
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const Q=shuffle(ALL_Q);
+
+let cur=0,score=0,playerName='',lastEntry=null,timerInterval=null,timeLeft=20;
+const TIMER_MAX=15;
+
+function clearTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}}
+
+function startTimer(){
+  clearTimer();
+  timeLeft=15;
+  updateTimerUI();
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    updateTimerUI();
+    if(timeLeft<=0){clearTimer();timeExpired();}
+  },1000);
+}
+
+function updateTimerUI(){
+  const pct=(timeLeft/TIMER_MAX)*100;
+  const fill=document.getElementById('timer-fill');
+  const num=document.getElementById('timer-num');
+  if(!fill||!num)return;
+  fill.style.width=pct+'%';
+  num.textContent=timeLeft;
+  fill.className='timer-fill '+(timeLeft>10?'timer-green':timeLeft>5?'timer-amber':'timer-red');
+}
+
+function timeExpired(){
+  const q=Q[cur];
+  const btns=document.querySelectorAll('.opt');
+  btns.forEach(b=>b.disabled=true);
+  btns[q.ans].classList.add('reveal-correct');
+  document.getElementById('verdict').textContent='Time\'s up!';
+  document.getElementById('explanation').textContent=q.exp;
+  document.getElementById('feedback').className='feedback wrong show';
+  document.getElementById('next-btn').className='next-btn show';
+}
+
+function tiers(s){
+  const p=s/Q.length;
+  if(p<.35)return{label:"Wage Determination Rookie",bg:"linear-gradient(90deg,#D85A30,#993C1D)",msg:"Everyone starts somewhere! Consider this a crash course. The regulations are waiting for you — and now you know where to focus."};
+  if(p<.6)return{label:"Apprentice in Compliance",bg:"linear-gradient(90deg,#BA7517,#854F0B)",msg:"Solid foundation! You've got the basics down. A few more reps on fringe benefit rules and state-specific requirements and you'll be dangerous."};
+  if(p<.85)return{label:"Journeyman Compliance Pro",bg:"linear-gradient(90deg,#185FA5,#0F6E56)",msg:"Strong work! You clearly know your way around a wage determination. Fine-tune those edge cases and you're knocking on legend territory."};
+  return{label:"Certified Prevailing Wage Legend",bg:"linear-gradient(90deg,#534AB7,#1D9E75)",msg:"Exceptional! The DOL should be calling you for consulting. You are the person your team comes to when things get complicated — and you'll have the answer."};
+}
+
+function showNameScreen(){
+  hide('quiz-main');hide('score-screen');hide('lb-screen');
+  show('name-screen');
+}
+function show(id){document.getElementById(id).style.display='block';}
+function hide(id){document.getElementById(id).style.display='none';}
+
+function startQuiz(){
+  const n=document.getElementById('player-name').value.trim();
+  if(!n){document.getElementById('player-name').focus();return;}
+  playerName=n;
+  cur=0;score=0;
+  hide('name-screen');show('quiz-main');
+  render();
+}
+
+function render(){
+  const q=Q[cur];
+  document.getElementById('q-label').textContent=`Question ${cur+1} of ${Q.length}`;
+  document.getElementById('prog').style.width=`${(cur/Q.length)*100}%`;
+  const catClass=CAT_MAP[q.cat]||'cat-SCA';
+  document.getElementById('q-text').innerHTML=q.q+`<span class="cat-tag ${catClass}">${q.cat}</span>`;
+  const fb=document.getElementById('feedback');
+  fb.className='feedback';
+  document.getElementById('next-btn').className='next-btn';
+  const opts=document.getElementById('options');
+  opts.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className=`opt ${OPT_CLASSES[i]}`;
+    b.innerHTML=`<div class="opt-inner"><span class="opt-letter">${LETTERS[i]}</span>${o}</div>`;
+    b.onclick=()=>select(i);
+    opts.appendChild(b);
+  });
+  startTimer();
+}
+
+function select(i){
+  clearTimer();
+  const q=Q[cur];
+  const btns=document.querySelectorAll('.opt');
+  btns.forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedback');
+  if(i===q.ans){
+    btns[i].classList.add('correct');score++;
+    document.getElementById('verdict').textContent='Correct! ✓';
+    fb.className='feedback correct show';
+  } else {
+    btns[i].classList.add('wrong');
+    btns[q.ans].classList.add('reveal-correct');
+    document.getElementById('verdict').textContent='Not quite!';
+    fb.className='feedback wrong show';
+  }
+  document.getElementById('explanation').textContent=q.exp;
+  document.getElementById('next-btn').className='next-btn show';
+}
+
+document.getElementById('next-btn').onclick=()=>{
+  cur++;
+  if(cur<Q.length){render();}else{showScore();}
+};
+
+async function saveScore(name,s){
+  try{
+    const key=`score:${Date.now()}:${Math.random().toString(36).slice(2,7)}`;
+    const t=tiers(s);
+    await window.storage.set(key,JSON.stringify({name,score:s,total:Q.length,tier:t.label,ts:Date.now()}),true);
+    return key;
+  }catch(e){return null;}
+}
+
+async function loadScores(){
+  try{
+    const res=await window.storage.list('score:',true);
+    if(!res||!res.keys||!res.keys.length)return[];
+    const entries=await Promise.all(res.keys.map(async k=>{
+      try{const r=await window.storage.get(k,true);return r?JSON.parse(r.value):null;}catch{return null;}
+    }));
+    return entries.filter(Boolean).sort((a,b)=>b.score-a.score||a.ts-b.ts);
+  }catch{return[];}
+}
+
+async function showScore(){
+  hide('quiz-main');
+  const t=tiers(score);
+  const pct=Math.round((score/Q.length)*100);
+  const ss=document.getElementById('score-screen');
+  ss.style.display='block';
+  ss.innerHTML=`
+    <div class="trophy">${pct>=90?'🏆':pct>=70?'🎖️':pct>=40?'📋':'📝'}</div>
+    <div class="score-ring"><span class="score-num">${score}</span><span class="score-denom">of ${Q.length}</span></div>
+    <div class="score-pct">${pct}% correct</div>
+    <div class="tier-badge" style="background:${t.bg}">${t.label}</div>
+    <div class="tier-msg">${t.msg}</div>
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1.25rem">Saving your score...</div>
+    <div class="btn-row" id="score-btns"></div>
+  `;
+  lastEntry=await saveScore(playerName,score);
+  ss.querySelector('div[style*="Saving"]').textContent='Score saved!';
+  document.getElementById('score-btns').innerHTML=`
+    <button class="btn-primary" onclick="showLeaderboard()">View leaderboard →</button>
+    <button class="btn-secondary" onclick="restart()">Play again ↺</button>
+  `;
+}
+
+async function showLeaderboard(){
+  hide('name-screen');hide('quiz-main');hide('score-screen');
+  show('lb-screen');
+  document.getElementById('lb-content').innerHTML='<div class="loading">Loading scores...</div>';
+  const scores=await loadScores();
+  if(!scores.length){
+    document.getElementById('lb-content').innerHTML='<div class="empty-state">No scores yet — be the first to finish!</div>';
+    return;
+  }
+  const tierColor=t=>{
+    if(t.includes('Legend'))return'background:linear-gradient(90deg,#534AB7,#1D9E75)';
+    if(t.includes('Journeyman'))return'background:linear-gradient(90deg,#185FA5,#0F6E56)';
+    if(t.includes('Apprentice'))return'background:linear-gradient(90deg,#BA7517,#854F0B)';
+    return'background:linear-gradient(90deg,#D85A30,#993C1D)';
+  };
+  const rows=scores.slice(0,20).map((e,i)=>{
+    const rank=i+1;
+    const rankClass=rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-n';
+    const isMe=lastEntry&&e.ts===e.ts&&e.name===playerName&&e.score===score&&i===scores.findIndex(x=>x.name===playerName&&x.score===score);
+    const pct=Math.round((e.score/e.total)*100);
+    const date=new Date(e.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    return`<tr${isMe?' class="highlight"':''}>
+      <td><span class="rank-badge ${rankClass}">${rank<=3?['🥇','🥈','🥉'][rank-1]:rank}</span></td>
+      <td style="font-weight:500">${e.name}</td>
+      <td>${e.score}/${e.total} <span style="color:var(--color-text-secondary);font-size:12px">(${pct}%)</span></td>
+      <td><span class="tier-pill" style="${tierColor(e.tier)}">${e.tier.split(' ').slice(0,2).join(' ')}</span></td>
+      <td style="color:var(--color-text-secondary);font-size:13px">${date}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('lb-content').innerHTML=`
+    <table class="lb-table">
+      <thead><tr><th>#</th><th>Name</th><th>Score</th><th>Tier</th><th>Date</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p style="font-size:12px;color:var(--color-text-secondary);margin-top:1rem;text-align:center">Showing top 20 scores · Leaderboard is shared across all players</p>
+  `;
+}
+
+function restart(){
+  hide('score-screen');
+  document.getElementById('player-name').value=playerName;
+  show('name-screen');
+}
+
+showNameScreen();
+</script>
