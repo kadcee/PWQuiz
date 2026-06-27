@@ -88,7 +88,7 @@
 
   .ready-banner{background:#E1F5EE;color:#04342C;border:1.5px solid #5DCAA5;border-radius:var(--border-radius-md);padding:12px 16px;text-align:center;margin-bottom:1rem;font-size:14px;line-height:1.5}
 
-  .setup-card{max-width:520px}
+  .setup-card{max-width:100%}
   .setup-card input{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary)}
 
   .score-pill{display:inline-block;padding:6px 18px;border-radius:20px;font-size:14px;font-weight:500;margin:4px}
@@ -209,7 +209,7 @@ function updateTimerUI(){
   const numEl=document.getElementById('timer-num');
   const barEl=document.getElementById('timer-bar');
   if(!numEl||!barEl) return;
-  const total=timerPhase==='steal'?5:10;
+  const total=timerPhase==='steal'?10:timerPhase==='grace'?5:10;
   const pct=Math.round((timerSec/total)*100);
   numEl.textContent=timerSec;
   numEl.className='timer-num'+(timerSec<=3?' urgent':'');
@@ -314,7 +314,7 @@ function gameHTML(){
       ${!answered?`
         <div id="ready-banner" class="ready-banner">📖 Read the question and choices aloud, then click <strong>Start Timer</strong> when ready.</div>
         <div style="text-align:center;margin-bottom:1rem"><button id="startTimerBtn" class="btn-start-timer">▶ Start Timer</button></div>
-        <div id="timer-row" class="timer-row" style="display:none">
+                  <div id="timer-row" class="timer-row" style="display:none">
           <span id="timer-num" class="timer-num">10</span>
           <div class="timer-bar-wrap"><div id="timer-bar" class="timer-bar" style="width:100%;background:#534AB7"></div></div>
         </div>
@@ -358,8 +358,8 @@ function gameHTML(){
       ${!done?`
         <div class="steal-banner">⚡ ${other.name} has 5 seconds to steal for 1 point!</div>
         <div class="timer-row">
-          <span id="timer-num" class="timer-num">${timerSec||5}</span>
-          <div class="timer-bar-wrap"><div id="timer-bar" class="timer-bar" style="width:${Math.round((timerSec/5)*100)}%;background:#D85A30"></div></div>
+          <span id="timer-num" class="timer-num">${timerSec||10}</span>
+          <div class="timer-bar-wrap"><div id="timer-bar" class="timer-bar" style="width:${Math.round((timerSec/10)*100)}%;background:#D85A30"></div></div>
         </div>
       `:''}
       <div class="q-card">
@@ -506,10 +506,17 @@ function attachEvents(){
       timerPhase='main';timerSec=10;
       updateTimerUI();
       startTimer(10,()=>{
-        // time up — show flash then auto-steal
+        // main time up — show grace flash, start 5s grace period
         const flash=document.getElementById('flash-msg');
         if(flash) flash.style.display='block';
-        setTimeout(()=>triggerSteal(),1200);
+        timerPhase='grace';timerSec=5;
+        updateTimerUI();
+        const row=document.getElementById('timer-row');
+        if(row) row.style.display='flex';
+        startTimer(5,()=>{
+          // grace expired — trigger steal
+          triggerSteal();
+        });
       });
     };
   }
