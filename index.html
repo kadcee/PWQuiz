@@ -1,4 +1,3 @@
-
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-sans);color:var(--color-text-primary);padding:1rem;background:var(--color-background-tertiary)}
@@ -67,6 +66,8 @@
   button:active{transform:scale(0.98)}
   .btn-primary{background:#534AB7;border-color:#3C3489;color:#fff}
   .btn-primary:hover{background:#3C3489}
+  .btn-start-timer{background:#0F6E56;border-color:#085041;color:#fff;font-size:15px;padding:10px 24px;border-radius:var(--border-radius-md)}
+  .btn-start-timer:hover{background:#085041}
 
   .setup{max-width:480px}
   .setup label{font-size:13px;color:var(--color-text-secondary);display:block;margin-bottom:4px;margin-top:12px}
@@ -84,6 +85,8 @@
   .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
   .filter-btn{font-size:12px;padding:4px 10px}
   .filter-btn.on{background:#EEEDFE;border-color:#534AB7;color:#3C3489}
+
+  .ready-banner{background:#E1F5EE;color:#04342C;border:1.5px solid #5DCAA5;border-radius:var(--border-radius-md);padding:12px 16px;text-align:center;margin-bottom:1rem;font-size:14px;line-height:1.5}
 </style>
 
 <div id="app"></div>
@@ -136,6 +139,7 @@ const OPT_COLORS = ['a','b','c','d'];
 let timer = null;
 let timerPhase = 'none'; // 'none' | 'main' | 'grace'
 let timerSec = 0;
+let timerStarted = false;
 
 let state = {
   screen:'setup',
@@ -157,12 +161,21 @@ function buildQueue(){
   state.current=0;
 }
 
-function stopTimer(){clearInterval(timer);timer=null;timerPhase='none';}
+function stopTimer(){clearInterval(timer);timer=null;timerPhase='none';timerStarted=false;}
 
 function startMainTimer(){
-  stopTimer();
+  if(timerStarted) return;
+  timerStarted=true;
   timerPhase='main';
   timerSec=15;
+  // Hide the Start Timer button
+  const btn=document.getElementById('startTimerBtn');
+  if(btn) btn.style.display='none';
+  const ready=document.getElementById('ready-banner');
+  if(ready) ready.style.display='none';
+  // Show timer row
+  const row=document.getElementById('timer-row');
+  if(row) row.style.display='flex';
   updateTimerUI();
   timer=setInterval(()=>{
     timerSec--;
@@ -173,7 +186,8 @@ function startMainTimer(){
       timerPhase='grace';
       timerSec=5;
       updateTimerUI();
-      showFlash('warning');
+      const flashEl=document.getElementById('flash-msg');
+      if(flashEl){flashEl.style.display='block';flashEl.className='flash-msg warning';}
       timer=setInterval(()=>{
         timerSec--;
         updateTimerUI();
@@ -181,6 +195,7 @@ function startMainTimer(){
           clearInterval(timer);
           timer=null;
           timerPhase='none';
+          timerStarted=false;
           state.forfeited=true;
           state.answered=true;
           render();
@@ -199,15 +214,10 @@ function updateTimerUI(){
   const pct=Math.round((timerSec/total)*100);
   numEl.textContent=timerSec;
   numEl.className='timer-num'+(timerSec<=5?' urgent':'');
-  const color=timerSec<=5?'#D85A30':timerSec<=10?'#BA7517':'#534AB7';
+  const color=timerSec<=5?'#D85A30':timerSec<=7?'#BA7517':'#534AB7';
   barEl.style.width=pct+'%';
   barEl.style.background=color;
   if(flashEl&&timerPhase==='grace') flashEl.style.display='block';
-}
-
-function showFlash(type){
-  const el=document.getElementById('flash-msg');
-  if(el){el.style.display='block';el.className='flash-msg '+type;}
 }
 
 function render(){
@@ -216,8 +226,7 @@ function render(){
   else if(state.screen==='game') app.innerHTML=gameHTML();
   else app.innerHTML=winnerHTML();
   attachEvents();
-  if(state.screen==='game'&&!state.answered) startMainTimer();
-  else if(state.screen!=='game') stopTimer();
+  if(state.screen!=='game') stopTimer();
 }
 
 function setupHTML(){
@@ -288,9 +297,6 @@ function gameHTML(){
   }
 
   const nextLabel=state.current<state.queue.length-1?'Next question →':'See results';
-  const totalSec=timerPhase==='grace'?10:20;
-  const initPct=state.answered?0:100;
-  const timerColor=timerSec<=5?'#D85A30':timerSec<=10?'#BA7517':'#534AB7';
 
   return `
     <h1>Prevailing Wage Team Trivia</h1>
@@ -304,15 +310,23 @@ function gameHTML(){
         </div>`).join('')}
     </div>
     <div class="turn-banner team${state.turn}">🎯 ${t.name}'s turn to answer</div>
+
     ${!state.answered?`
-    <div class="timer-row">
-      <span id="timer-num" class="timer-num${timerSec<=5?' urgent':''}">${timerSec||20}</span>
-      <div class="timer-bar-wrap">
-        <div id="timer-bar" class="timer-bar" style="width:${initPct}%;background:${timerColor}"></div>
+      <div id="ready-banner" class="ready-banner">
+        📖 Read the question and choices aloud, then click <strong>Start Timer</strong> when ready.
       </div>
-    </div>
-    <div id="flash-msg" class="flash-msg warning" style="display:none">⏰ Time is up — please select an answer now! (${timerSec}s remaining)</div>
+      <div style="text-align:center;margin-bottom:1rem">
+        <button id="startTimerBtn" class="btn-start-timer">▶ Start Timer</button>
+      </div>
+      <div id="timer-row" class="timer-row" style="display:none">
+        <span id="timer-num" class="timer-num">15</span>
+        <div class="timer-bar-wrap">
+          <div id="timer-bar" class="timer-bar" style="width:100%;background:#534AB7"></div>
+        </div>
+      </div>
+      <div id="flash-msg" class="flash-msg warning" style="display:none">⏰ Time is up — please select an answer now!</div>
     `:''}
+
     <div class="progress">Question ${state.current+1} of ${state.queue.length}</div>
     <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
     <div class="q-card">
@@ -347,7 +361,6 @@ function winnerHTML(){
     @keyframes drop{0%{top:-60px;opacity:1;transform:rotate(0deg)}100%{top:110%;opacity:0;transform:rotate(720deg)}}
     @keyframes popIn{0%{transform:scale(0.3);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
     @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-    @keyframes shimmer{0%{opacity:0.7}50%{opacity:1}100%{opacity:0.7}}
     .conf-piece{position:absolute;top:-60px;animation:drop linear infinite;pointer-events:none}
     .winner-box{animation:popIn 0.6s cubic-bezier(.17,.89,.32,1.28) forwards}
     .winner-name{animation:pulse 1.5s ease-in-out infinite}
@@ -394,6 +407,7 @@ function attachEvents(){
       state.answered=false;
       state.forfeited=false;
       state.selected=null;
+      timerStarted=false;
       render();
     };
   }
@@ -404,6 +418,11 @@ function attachEvents(){
       render();
     };
   });
+
+  const startTimerBtn=document.getElementById('startTimerBtn');
+  if(startTimerBtn){
+    startTimerBtn.onclick=()=>{ startMainTimer(); };
+  }
 
   document.querySelectorAll('.opt-btn').forEach(btn=>{
     btn.onclick=()=>{
@@ -439,6 +458,7 @@ function attachEvents(){
         state.selected=null;
         state.answered=false;
         state.forfeited=false;
+        timerStarted=false;
       }
       render();
     };
@@ -449,10 +469,11 @@ function attachEvents(){
     restartBtn.onclick=()=>{
       stopTimer();
       state={screen:'setup',teams:[{name:'Team A',score:0},{name:'Team B',score:0}],queue:[],current:0,turn:0,selected:null,answered:false,forfeited:false,goalScore:15,filters:{sca:true,dba:true,state:true,audit:true,gen:true}};
+      timerStarted=false;
       render();
     };
   }
 }
-      
+
 render();
 </script>
