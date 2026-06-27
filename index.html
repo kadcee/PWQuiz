@@ -2,7 +2,6 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-sans);color:var(--color-text-primary);padding:1rem;background:var(--color-background-tertiary)}
   h1{font-size:22px;font-weight:500;margin-bottom:4px}
-  .sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.5rem}
 
   .scores{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.25rem}
   .score-card{border-radius:var(--border-radius-lg);padding:1rem 1.25rem;text-align:center;border:2px solid transparent;transition:border-color 0.2s}
@@ -18,6 +17,18 @@
   .turn-banner{border-radius:var(--border-radius-md);padding:9px 14px;font-size:14px;font-weight:500;margin-bottom:1rem;text-align:center}
   .turn-banner.team0{background:#534AB7;color:#fff}
   .turn-banner.team1{background:#0F6E56;color:#fff}
+  .turn-banner.steal{background:#D85A30;color:#fff}
+
+  .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+  .cat-btn{border-radius:var(--border-radius-md);padding:14px 12px;font-size:14px;font-weight:500;cursor:pointer;border:2px solid transparent;text-align:center;transition:filter 0.15s}
+  .cat-btn:hover:not(:disabled){filter:brightness(0.9)}
+  .cat-btn:disabled{cursor:default;opacity:0.4;filter:grayscale(0.5)}
+  .cat-btn.sca{background:#E6F1FB;color:#0C447C;border-color:#7BB8EC}
+  .cat-btn.dba{background:#E1F5EE;color:#085041;border-color:#5DCAA5}
+  .cat-btn.state{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
+  .cat-btn.audit{background:#FAEEDA;color:#633806;border-color:#EF9F27}
+  .cat-btn.gen{background:#F1EFE8;color:#444441;border-color:#C5C3BB}
+  .cat-depleted{font-size:10px;display:block;margin-top:3px;opacity:0.6}
 
   .timer-row{display:flex;align-items:center;gap:12px;margin-bottom:0.75rem}
   .timer-num{font-size:22px;font-weight:500;min-width:36px;text-align:center;transition:color 0.3s}
@@ -27,8 +38,9 @@
 
   .flash-msg{border-radius:var(--border-radius-md);padding:10px 14px;font-size:14px;font-weight:500;text-align:center;margin-bottom:0.75rem;animation:flashpulse 0.5s ease-in-out infinite alternate}
   .flash-msg.warning{background:#FAECE7;color:#712B13;border:1.5px solid #D85A30}
-  .flash-msg.forfeit{background:#FCEBEB;color:#501313;border:1.5px solid #A32D2D}
   @keyframes flashpulse{from{opacity:1}to{opacity:0.55}}
+
+  .steal-banner{background:#FAEEDA;border:2px solid #EF9F27;border-radius:var(--border-radius-md);padding:12px 16px;text-align:center;margin-bottom:1rem;font-size:14px;font-weight:500;color:#412402}
 
   .q-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
   .q-meta{font-size:12px;margin-bottom:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -58,7 +70,8 @@
   .feedback{margin-top:1rem;padding:10px 12px;border-radius:var(--border-radius-md);font-size:13px;line-height:1.55}
   .feedback.correct{background:#EAF3DE;color:#27500A;border-left:3px solid #639922}
   .feedback.wrong{background:#FCEBEB;color:#501313;border-left:3px solid #A32D2D}
-  .feedback.forfeit{background:#FCEBEB;color:#501313;border-left:3px solid #A32D2D}
+  .feedback.steal-correct{background:#FAEEDA;color:#412402;border-left:3px solid #EF9F27}
+  .feedback.no-steal{background:#FCEBEB;color:#501313;border-left:3px solid #A32D2D}
 
   .actions{display:flex;gap:8px;margin-top:1rem}
   button{background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:8px 16px;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
@@ -69,46 +82,43 @@
   .btn-start-timer{background:#0F6E56;border-color:#085041;color:#fff;font-size:15px;padding:10px 24px;border-radius:var(--border-radius-md)}
   .btn-start-timer:hover{background:#085041}
 
-  .setup{max-width:480px}
-  .setup label{font-size:13px;color:var(--color-text-secondary);display:block;margin-bottom:4px;margin-top:12px}
-  .setup input{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary)}
-
-  .winner{text-align:center;padding:2rem 1rem}
-  .winner h2{font-size:26px;font-weight:500;margin-bottom:8px}
-  .winner p{color:var(--color-text-secondary);font-size:14px;margin-bottom:1.5rem}
-  .trophy{font-size:56px;margin-bottom:12px}
-
   .progress{font-size:12px;color:var(--color-text-secondary);margin-bottom:0.5rem}
   .progress-bar{height:5px;background:var(--color-background-secondary);border-radius:3px;margin-bottom:1.25rem}
   .progress-fill{height:5px;background:#534AB7;border-radius:3px;transition:width 0.3s}
 
-  .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
-  .filter-btn{font-size:12px;padding:4px 10px}
-  .filter-btn.on{background:#EEEDFE;border-color:#534AB7;color:#3C3489}
-
   .ready-banner{background:#E1F5EE;color:#04342C;border:1.5px solid #5DCAA5;border-radius:var(--border-radius-md);padding:12px 16px;text-align:center;margin-bottom:1rem;font-size:14px;line-height:1.5}
+
+  .setup-card{max-width:520px}
+  .setup-card input{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary)}
+
+  .score-pill{display:inline-block;padding:6px 18px;border-radius:20px;font-size:14px;font-weight:500;margin:4px}
 </style>
 
 <div id="app"></div>
 
 <script>
 const ALL_QUESTIONS = [
+  // SCA
   {q:"Which federal law establishes prevailing wage requirements for federal service contracts?",opts:["Davis-Bacon Act","Service Contract Act","Fair Labor Standards Act","Walsh-Healey Act"],ans:1,cat:"sca",diff:"easy",exp:"The Service Contract Act (SCA), enacted in 1965, requires contractors on federal service contracts exceeding $2,500 to pay locally prevailing wages and fringe benefits."},
   {q:"Which agency administers and enforces the Service Contract Act?",opts:["EEOC","DOL Wage and Hour Division","OFCCP","NLRB"],ans:1,cat:"sca",diff:"easy",exp:"The Wage and Hour Division (WHD) of the Department of Labor administers and enforces the SCA."},
-  {q:"The Davis-Bacon Act applies to which type of federal contracts?",opts:["Service and maintenance contracts","Construction contracts over $2,000","Supply and manufacturing contracts","All federal contracts over $10,000"],ans:1,cat:"dba",diff:"easy",exp:"The Davis-Bacon Act covers contracts for construction, alteration, or repair of federal or federally assisted buildings over $2,000."},
-  {q:"What is a Wage Determination under the SCA?",opts:["A worker's pay stub","An official listing of minimum wages and fringe benefits for a locality","A contractor's certified payroll report","A DOL audit finding"],ans:1,cat:"sca",diff:"easy",exp:"A Wage Determination is an official DOL document specifying the minimum wages and fringe benefits that must be paid to service employees in a given locality and occupation."},
-  {q:"Under the Davis-Bacon Act, what must contractors submit to document wage compliance?",opts:["I-9 forms","Certified Payroll Reports","W-2 forms","Wage Determination Requests"],ans:1,cat:"dba",diff:"easy",exp:"Certified Payroll Reports (CPRs), typically on WH-347 forms, document workers' classifications, hours, wages, and deductions for DBA compliance."},
   {q:"What is the minimum contract value threshold that triggers SCA coverage?",opts:["$500","$2,500","$10,000","$25,000"],ans:1,cat:"sca",diff:"med",exp:"The SCA applies to federal service contracts exceeding $2,500 where the principal purpose is to furnish services in the United States through service employees."},
+  {q:"What is a Wage Determination under the SCA?",opts:["A worker's pay stub","An official listing of minimum wages and fringe benefits for a locality","A contractor's certified payroll report","A DOL audit finding"],ans:1,cat:"sca",diff:"easy",exp:"A Wage Determination is an official DOL document specifying the minimum wages and fringe benefits that must be paid to service employees in a given locality and occupation."},
   {q:"What does 'fringe benefits' refer to under the SCA?",opts:["Bonus pay for exceptional performance","Health, welfare, vacation, holiday, and other non-wage compensation","Shift differential pay","Hazardous duty pay"],ans:1,cat:"sca",diff:"med",exp:"Under the SCA, fringe benefits include health insurance, vacation, holidays, sick leave, pension, and other employer-provided benefits — or a cash equivalent in lieu."},
-  {q:"Which system is the official source for Davis-Bacon Wage Determinations?",opts:["SAP","SAM.gov","Wage.gov","OFCCP portal"],ans:1,cat:"dba",diff:"med",exp:"Davis-Bacon and SCA Wage Determinations are accessed through SAM.gov, the official federal procurement and compliance system."},
-  {q:"What is a 'conformance' under prevailing wage law?",opts:["A contractor's agreement to follow audit findings","Adding a new job classification not listed on a Wage Determination","A type of certified payroll error","A DOL debarment action"],ans:1,cat:"gen",diff:"med",exp:"A conformance is the process by which a contractor requests DOL approval to establish a wage rate for a job classification not listed on the applicable Wage Determination."},
   {q:"Under the SCA, what happens to wage obligations when a successor contractor takes over a service contract?",opts:["Obligations reset to current WD","Incumbent employees' wages are generally protected by the predecessor's CBA or WD","Successor can pay minimum wage until new WD is issued","Wages renegotiated if contract exceeds $100,000"],ans:1,cat:"sca",diff:"med",exp:"SCA Section 4(c) generally requires the new contractor to honor the wages and benefits in the predecessor's collective bargaining agreement for at least one year."},
-  {q:"What is 'debarment' in the context of prevailing wage enforcement?",opts:["A formal DOL warning letter","Exclusion from federal contract awards for up to 3 years","An audit finding requiring back wages only","A civil monetary penalty under FLSA"],ans:1,cat:"gen",diff:"hard",exp:"Debarment places a contractor on the Debarred Parties List, excluding them from federal contracts for up to 3 years for willful or aggravated violations under the SCA or DBA."},
   {q:"Under SCA regulations, how must a contractor handle the 'cash equivalent' option for fringe benefits?",opts:["Pay any amount above minimum wage","Pay the full H&W rate per hour worked as additional cash wages","Deposit funds into a qualified pension plan","Get DOL approval before paying cash in lieu"],ans:1,cat:"sca",diff:"hard",exp:"If a contractor does not provide bona fide fringe benefits, the full prevailing H&W rate must be paid as additional cash wages to each covered employee for each hour worked."},
+  {q:"What is the SCA health and welfare (H&W) benefit rate based on?",opts:["The contractor's location","A nationally uniform rate set annually by the DOL WHD","The local collective bargaining agreement rate","The federal poverty level"],ans:1,cat:"sca",diff:"med",exp:"The SCA H&W rate is a nationally uniform rate set by the DOL WHD and updated periodically. It applies to all hours paid (up to 40/week) unless a higher local rate applies."},
+  {q:"Which employees are generally exempt from SCA coverage?",opts:["Part-time workers","Bona fide executive, administrative, or professional employees","Workers earning tips","Seasonal workers"],ans:1,cat:"sca",diff:"med",exp:"Bona fide executive, administrative, and professional employees who meet the FLSA salary and duties tests are generally exempt from SCA wage requirements."},
+  {q:"What must a contractor do if a required SCA Wage Determination was not incorporated into the contract at award?",opts:["Ignore it — no WD means no obligation","Request a conformance for all workers","Notify the contracting agency and seek a contract modification to incorporate the correct WD","Wait until the next contract renewal"],ans:2,cat:"sca",diff:"hard",exp:"If a WD was omitted from a contract, the contractor must notify the contracting agency, which is responsible for incorporating the correct WD via contract modification. The contractor is still obligated to pay the applicable rates."},
+  // DBA
+  {q:"The Davis-Bacon Act applies to which type of federal contracts?",opts:["Service and maintenance contracts","Construction contracts over $2,000","Supply and manufacturing contracts","All federal contracts over $10,000"],ans:1,cat:"dba",diff:"easy",exp:"The Davis-Bacon Act covers contracts for construction, alteration, or repair of federal or federally assisted buildings over $2,000."},
+  {q:"Under the Davis-Bacon Act, what must contractors submit to document wage compliance?",opts:["I-9 forms","Certified Payroll Reports","W-2 forms","Wage Determination Requests"],ans:1,cat:"dba",diff:"easy",exp:"Certified Payroll Reports (CPRs), typically on WH-347 forms, document workers' classifications, hours, wages, and deductions for DBA compliance."},
+  {q:"Which system is the official source for Davis-Bacon Wage Determinations?",opts:["SAP","SAM.gov","Wage.gov","OFCCP portal"],ans:1,cat:"dba",diff:"med",exp:"Davis-Bacon and SCA Wage Determinations are accessed through SAM.gov, the official federal procurement and compliance system."},
   {q:"Which DOL form is used to submit a Davis-Bacon certified payroll report?",opts:["WH-380","WH-347","SF-1444","WH-56"],ans:1,cat:"dba",diff:"med",exp:"WH-347 is the optional but widely used DOL form for submitting certified payroll reports under the Davis-Bacon and Related Acts."},
   {q:"What is the 'helper classification' controversy under DBA?",opts:["Whether helpers must be paid journeyman rate","Whether unskilled laborers can be used on covered projects","DOL's reluctance to approve helper categories due to wage depression concerns","Overtime requirements for apprentices"],ans:2,cat:"dba",diff:"hard",exp:"DOL has historically been reluctant to approve helper classifications under DBA, concerned they would be used to circumvent journeyman wage rates by reclassifying skilled work."},
   {q:"Under DBA, the wage rate paid must be at least the rate for which labor classification?",opts:["The most common classification on the project","The classification whose duties most closely match the work actually performed","The lowest-paid classification on the WD","The classification requested by the worker"],ans:1,cat:"dba",diff:"med",exp:"Workers must be classified and paid according to the classification whose duties most closely match the work they actually perform, regardless of job title assigned by the employer."},
-  {q:"What is the SCA health and welfare (H&W) benefit rate based on?",opts:["The contractor's location","A nationally uniform rate set annually by the DOL WHD","The local collective bargaining agreement rate","The federal poverty level"],ans:1,cat:"sca",diff:"med",exp:"The SCA H&W rate is a nationally uniform rate set by the DOL WHD and updated periodically. It applies to all hours paid (up to 40/week) unless a higher local rate applies."},
+  {q:"How frequently must Davis-Bacon certified payroll reports typically be submitted?",opts:["Daily","Weekly","Monthly","Only at project completion"],ans:1,cat:"dba",diff:"easy",exp:"DBA certified payroll reports must be submitted weekly to the contracting agency, covering the prior week's payroll data for all covered workers on the project."},
+  {q:"Under DBA, what is the overtime standard for covered construction workers?",opts:["Time-and-a-half after 8 hours per day","Time-and-a-half after 40 hours per week under CWHSSA","Double time after 10 hours per day","No overtime requirement — only straight time prevailing rates apply"],ans:1,cat:"dba",diff:"med",exp:"DBA itself does not contain an overtime provision, but the Contract Work Hours and Safety Standards Act (CWHSSA) requires time-and-a-half for hours over 40 per week on covered federal contracts."},
+  // STATE
   {q:"Which state was among the first to enact its own 'Little Davis-Bacon' prevailing wage law?",opts:["Texas","California","Kansas","New York"],ans:3,cat:"state",diff:"med",exp:"New York enacted one of the earliest state prevailing wage laws in 1894, predating the federal Davis-Bacon Act by nearly 40 years."},
   {q:"Approximately how many U.S. states currently have their own prevailing wage laws covering public works?",opts:["All 50 states","Approximately 30 states","Approximately 20 states","Only the 10 most populous states"],ans:1,cat:"state",diff:"med",exp:"Approximately 30 states (plus DC) have enacted their own prevailing wage laws, though scope and thresholds vary widely."},
   {q:"California's prevailing wage law is administered by which agency?",opts:["California Labor Commissioner's Office","California Department of Industrial Relations (DIR)","California Department of Finance","California Public Utilities Commission"],ans:1,cat:"state",diff:"easy",exp:"California's prevailing wage program is administered by the DIR, specifically through the Division of Labor Standards Enforcement and the Public Works Unit."},
@@ -119,6 +129,11 @@ const ALL_QUESTIONS = [
   {q:"What does 'public works' typically mean under state prevailing wage laws?",opts:["Any work done in a public location","Construction, maintenance, or repair of infrastructure funded by public money","Work performed by government employees","Work on projects over $1 million"],ans:1,cat:"state",diff:"easy",exp:"Most state laws define public works as construction, maintenance, or repair projects funded in whole or in part by public money from a state or local government entity."},
   {q:"Under Illinois prevailing wage law, who is responsible for posting prevailing wage rates on the job site?",opts:["The Illinois Department of Labor","The general contractor","The awarding public body","Each individual subcontractor"],ans:2,cat:"state",diff:"hard",exp:"Under the Illinois Prevailing Wage Act, the awarding public body is required to ascertain and post the applicable prevailing wage rates."},
   {q:"Which of the following states does NOT have a state prevailing wage law?",opts:["California","Illinois","Texas","Washington"],ans:2,cat:"state",diff:"med",exp:"Texas does not have a state prevailing wage law for public works. Several southern and southwestern states have no such law or have repealed them."},
+  {q:"What is the general consequence when a state prevailing wage project also has federal funding?",opts:["The state law automatically supersedes federal law","Both federal and state requirements apply — contractors must comply with whichever standard is higher","Only federal law applies — state law is preempted","The contractor can choose which law to follow"],ans:1,cat:"state",diff:"med",exp:"When a project has both federal and state funding, both sets of prevailing wage requirements apply simultaneously. Contractors must pay the higher of the two applicable rates for each classification."},
+  {q:"Washington State's prevailing wage law is administered by which agency?",opts:["Washington State Department of Commerce","Washington State Department of Labor & Industries","Washington State Office of Financial Management","Washington State Auditor's Office"],ans:1,cat:"state",diff:"med",exp:"Washington State's prevailing wage program is administered by the Department of Labor & Industries (L&I), which sets and publishes prevailing wage rates by county and trade."},
+  {q:"How do most states determine their prevailing wage rates?",opts:["They adopt the federal Davis-Bacon rates directly","They conduct surveys of wages paid to workers in the area or rely on collective bargaining data","They use the federal minimum wage as the baseline","They allow contractors to self-report what they pay"],ans:1,cat:"state",diff:"med",exp:"Most states determine prevailing wage rates through periodic surveys of wages paid in the locality, or by referencing collective bargaining agreements, similar to the federal methodology under DBA."},
+  {q:"Which of the following best describes a 'little SCA' or state service contract law?",opts:["A state law requiring service contractors to pay a living wage on all private contracts","A state or local law requiring prevailing wages on service contracts funded by state or local government","A federal regulation extending SCA to state-funded contracts","An executive order requiring unions on all public projects"],ans:1,cat:"state",diff:"hard",exp:"Some states and localities have enacted laws similar to the federal SCA that require service contractors on state or locally funded contracts to pay prevailing wages — often called 'little SCA' laws."},
+  // AUDIT
   {q:"What is the primary objective of a prevailing wage compliance audit?",opts:["To verify the contractor's profit margins","To ensure workers were paid required wages, benefits, and that records are accurate","To assess environmental compliance on public projects","To review contractor bonding and insurance"],ans:1,cat:"audit",diff:"easy",exp:"A prevailing wage audit primarily verifies that covered workers received at least the required wage rates and fringe benefits, and that payroll records accurately reflect hours worked and wages paid."},
   {q:"Which document is the starting point for auditing Davis-Bacon wage compliance on a specific project?",opts:["The contractor's W-2 forms","The applicable Wage Determination incorporated into the contract","The contractor's union agreement","The DOL debarment list"],ans:1,cat:"audit",diff:"easy",exp:"The Wage Determination incorporated into the contract establishes the minimum rates and classifications required. Auditors compare certified payroll records against those rates."},
   {q:"What is 'back wage liability' in a prevailing wage audit?",opts:["Wages owed to future workers","The difference between wages actually paid and wages required under the applicable WD","Penalties assessed against subcontractors","Overtime owed under the FLSA"],ans:1,cat:"audit",diff:"easy",exp:"Back wage liability is the amount owed to workers when they were paid less than the applicable prevailing wage rate."},
@@ -131,93 +146,76 @@ const ALL_QUESTIONS = [
   {q:"What is an 'entrance conference' in the context of a prevailing wage audit?",opts:["A meeting where DOL announces debarment findings","The opening meeting between auditors and the contractor to explain scope and request records","A job site walk-through to verify worker classifications","A meeting with the contracting agency to review contract terms"],ans:1,cat:"audit",diff:"med",exp:"The entrance conference is the initial audit meeting where auditors explain the scope, identify records needed, and set expectations for the review process."},
   {q:"Which of the following is a red flag for prevailing wage noncompliance during an audit?",opts:["All workers listed under the same single occupation on a diverse project","Certified payroll hours match daily sign-in logs","Workers paid exactly the WD rate","Fringe benefits provided through a bona fide plan"],ans:0,cat:"audit",diff:"hard",exp:"When all workers on a diverse project are listed under one classification, it may indicate misclassification to avoid higher rates for skilled trades — a common audit red flag."},
   {q:"What is the significance of the 'Statement of Compliance' on a certified payroll report?",opts:["Confirms the contractor has no outstanding violations","The contractor's signed certification under penalty of law that payroll information is accurate","Verifies all workers are union members","Documents that the contracting officer reviewed and approved the payroll"],ans:1,cat:"audit",diff:"med",exp:"The Statement of Compliance is signed under penalty of law affirming payroll information is true and complete. False statements can result in criminal liability under 18 U.S.C. § 1001."},
+  // GENERAL
+  {q:"What is a 'conformance' under prevailing wage law?",opts:["A contractor's agreement to follow audit findings","Adding a new job classification not listed on a Wage Determination","A type of certified payroll error","A DOL debarment action"],ans:1,cat:"gen",diff:"med",exp:"A conformance is the process by which a contractor requests DOL approval to establish a wage rate for a job classification not listed on the applicable Wage Determination."},
+  {q:"What is 'debarment' in the context of prevailing wage enforcement?",opts:["A formal DOL warning letter","Exclusion from federal contract awards for up to 3 years","An audit finding requiring back wages only","A civil monetary penalty under FLSA"],ans:1,cat:"gen",diff:"hard",exp:"Debarment places a contractor on the Debarred Parties List, excluding them from federal contracts for up to 3 years for willful or aggravated violations under the SCA or DBA."},
+  {q:"What is the primary difference between the SCA and the Davis-Bacon Act in terms of the work they cover?",opts:["SCA covers construction; DBA covers services","SCA covers service work (janitorial, security, IT support); DBA covers construction and renovation","SCA applies only to defense contracts; DBA applies to all federal contracts","There is no difference — both cover the same types of work"],ans:1,cat:"gen",diff:"easy",exp:"The SCA covers service employees performing work like janitorial, security, food service, and IT support on federal contracts, while DBA covers laborers and mechanics on federal construction projects."},
+  {q:"What does 'prevailing wage' mean in the context of federal contracting?",opts:["The minimum wage set by the FLSA","The wage rate that prevails for a given occupation in a given locality, as determined by the DOL","The average wage paid by the 10 largest contractors in a region","The union wage rate applicable to all workers regardless of location"],ans:1,cat:"gen",diff:"easy",exp:"A prevailing wage is the rate of pay — including wages and fringe benefits — determined by DOL to be prevalent for a given trade or occupation in a specific geographic area, based on local wage surveys or CBAs."},
+  {q:"Which law requires overtime pay at time-and-a-half for hours over 40 per week on most federal service and construction contracts?",opts:["The Davis-Bacon Act","The Service Contract Act","The Contract Work Hours and Safety Standards Act (CWHSSA)","The Fair Labor Standards Act alone"],ans:2,cat:"gen",diff:"med",exp:"The CWHSSA applies to most federal and federally assisted contracts over $100,000 and requires overtime at 1.5x the basic rate for all hours over 40 in a workweek, in addition to DBA and SCA requirements."},
+  {q:"What is the role of the contracting officer in prevailing wage compliance?",opts:["They set the wage rates directly","They incorporate the correct Wage Determination into the contract and ensure contractor compliance","They audit contractor payroll records on a monthly basis","They have no role — compliance is solely between the contractor and DOL"],ans:1,cat:"gen",diff:"med",exp:"The contracting officer is responsible for ensuring the appropriate Wage Determination is incorporated into the contract, and plays a key role in monitoring contractor compliance and referring violations to the DOL WHD."},
+  {q:"What is 'wage restitution' in prevailing wage enforcement?",opts:["A fine paid to the DOL for noncompliance","Back wages paid directly to workers who were underpaid","A bond requirement for repeat violators","A tax penalty assessed by the IRS"],ans:1,cat:"gen",diff:"easy",exp:"Wage restitution is the repayment of back wages directly to affected workers who were paid less than the required prevailing wage rate. It is the primary remedy in most prevailing wage enforcement actions."},
+  {q:"Which federal register publication would a contractor consult to find newly issued or revised SCA Wage Determinations?",opts:["The Federal Acquisition Regulation (FAR)","SAM.gov Wage Determinations Online","The Congressional Record","The Bureau of Labor Statistics Occupational Outlook Handbook"],ans:1,cat:"gen",diff:"med",exp:"SAM.gov (specifically the Wage Determinations section, formerly wdol.gov) is the official source for current SCA and DBA Wage Determinations used in federal contracting."},
+  {q:"A contractor working on a project that transitions from state-only funding to federal funding mid-project must do what?",opts:["Nothing — the contract terms already set at award cannot change","Begin complying with applicable federal prevailing wage requirements from the point federal funding is introduced","Only comply with federal requirements if the project value exceeds $1 million","Renegotiate all worker pay to federal rates retroactively from project start"],ans:1,cat:"gen",diff:"hard",exp:"When federal funding is introduced to a project, federal prevailing wage obligations (DBA or SCA) attach at that point. Contractors must begin compliance with the applicable federal requirements going forward."},
+  {q:"What is the purpose of the DOL's 'All Agency Memoranda' (AAMs) in the context of SCA?",opts:["They set new federal minimum wage rates","They provide guidance and policy clarifications on SCA administration and fringe benefit compliance","They list all debarred contractors","They establish certified payroll reporting deadlines"],ans:1,cat:"gen",diff:"hard",exp:"AAMs are issued by the DOL Wage and Hour Division to provide guidance to contracting agencies and contractors on SCA policy, including how to handle fringe benefit contributions, H&W rates, and other compliance questions."},
 ];
 
-const LETTERS = ['A','B','C','D'];
-const OPT_COLORS = ['a','b','c','d'];
+const LETTERS=['A','B','C','D'];
+const OPT_COLORS=['a','b','c','d'];
+const CAT_LABELS={sca:'SCA',dba:'DBA',state:'State Laws',audit:'Audit',gen:'General'};
+const CAT_ICONS={sca:'📋',dba:'🏗️',state:'🗺️',audit:'🔍',gen:'⚖️'};
+const DIFF_PTS={easy:1,med:2,hard:3};
 
-let timer = null;
-let timerPhase = 'none'; // 'none' | 'main' | 'grace'
-let timerSec = 0;
-let timerStarted = false;
+let timer=null,timerPhase='none',timerSec=0,timerStarted=false;
 
-let state = {
+let state={
   screen:'setup',
   teams:[{name:'Team A',score:0},{name:'Team B',score:0}],
-  queue:[],
+  usedIds:new Set(),
+  catCounts:{sca:0,dba:0,state:0,audit:0,gen:0},
+  currentQ:null,
   current:0,
   turn:0,
   selected:null,
-  answered:false,
-  forfeited:false,
+  phase:'pick', // 'pick' | 'read' | 'steal' | 'done'
+  stealResult:null,
   goalScore:15,
-  filters:{sca:true,dba:true,state:true,audit:true,gen:true}
 };
 
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-
-function buildQueue(){
-  state.queue=shuffle(ALL_QUESTIONS.filter(q=>state.filters[q.cat]));
-  state.current=0;
+function catTotal(cat){return ALL_QUESTIONS.filter(q=>q.cat===cat).length;}
+function catRemaining(cat){return ALL_QUESTIONS.filter(q=>q.cat===cat&&!state.usedIds.has(q.q)).length;}
+function randomFromCat(cat){
+  const pool=ALL_QUESTIONS.filter(q=>q.cat===cat&&!state.usedIds.has(q.q));
+  if(!pool.length) return null;
+  return pool[Math.floor(Math.random()*pool.length)];
 }
-
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function stopTimer(){clearInterval(timer);timer=null;timerPhase='none';timerStarted=false;}
+function otherTeam(){return 1-state.turn;}
 
-function startMainTimer(){
-  if(timerStarted) return;
+function startTimer(sec, onDone){
+  stopTimer();
   timerStarted=true;
   timerPhase='main';
-  timerSec=15;
-  // Hide the Start Timer button
-  const btn=document.getElementById('startTimerBtn');
-  if(btn) btn.style.display='none';
-  const ready=document.getElementById('ready-banner');
-  if(ready) ready.style.display='none';
-  // Show timer row
-  const row=document.getElementById('timer-row');
-  if(row) row.style.display='flex';
+  timerSec=sec;
   updateTimerUI();
   timer=setInterval(()=>{
     timerSec--;
     updateTimerUI();
-    if(timerSec<=0){
-      clearInterval(timer);
-      timer=null;
-      timerPhase='grace';
-      timerSec=5;
-      updateTimerUI();
-      const flashEl=document.getElementById('flash-msg');
-      if(flashEl){flashEl.style.display='block';flashEl.className='flash-msg warning';}
-      timer=setInterval(()=>{
-        timerSec--;
-        updateTimerUI();
-        if(timerSec<=0){
-          clearInterval(timer);
-          timer=null;
-          timerPhase='none';
-          timerStarted=false;
-          state.forfeited=true;
-          state.answered=true;
-          render();
-        }
-      },1000);
-    }
+    if(timerSec<=0){clearInterval(timer);timer=null;timerStarted=false;onDone();}
   },1000);
 }
 
 function updateTimerUI(){
   const numEl=document.getElementById('timer-num');
   const barEl=document.getElementById('timer-bar');
-  const flashEl=document.getElementById('flash-msg');
   if(!numEl||!barEl) return;
-  const total=timerPhase==='grace'?5:15;
+  const total=timerPhase==='steal'?5:10;
   const pct=Math.round((timerSec/total)*100);
   numEl.textContent=timerSec;
-  numEl.className='timer-num'+(timerSec<=5?' urgent':'');
-  const color=timerSec<=5?'#D85A30':timerSec<=7?'#BA7517':'#534AB7';
+  numEl.className='timer-num'+(timerSec<=3?' urgent':'');
+  const color=timerSec<=3?'#D85A30':timerSec<=6?'#BA7517':'#534AB7';
   barEl.style.width=pct+'%';
   barEl.style.background=color;
-  if(flashEl&&timerPhase==='grace') flashEl.style.display='block';
 }
 
 function render(){
@@ -230,19 +228,13 @@ function render(){
 }
 
 function setupHTML(){
-  const cats={sca:'SCA',dba:'DBA',state:'State laws',audit:'Audit',gen:'General'};
-  const catColors={sca:'#E6F1FB;color:#0C447C',dba:'#E1F5EE;color:#085041',state:'#EEEDFE;color:#3C3489',audit:'#FAEEDA;color:#633806',gen:'#F1EFE8;color:#444441'};
-  const catOnColors={sca:'#185FA5;color:#fff',dba:'#0F6E56;color:#fff',state:'#534AB7;color:#fff',audit:'#BA7517;color:#fff',gen:'#5F5E5A;color:#fff'};
-  const filterBtns=Object.entries(cats).map(([k,v])=>{
-    const style=state.filters[k]?catOnColors[k]:catColors[k];
-    return `<button class="filter-btn" data-cat="${k}" style="background:${style.split(';')[0].replace('background:','')};${style.split(';')[1]};border:none;padding:7px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer">${v}</button>`;
-  }).join('');
   return `
   <div style="text-align:center;padding:1.5rem 1rem 0.5rem">
     <div style="font-size:48px;margin-bottom:8px">🏛️⚖️</div>
     <h1 style="font-size:24px;font-weight:500;color:#534AB7;margin-bottom:6px">Prevailing Wage Team Trivia</h1>
-    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Test your SCA, DBA, state law &amp; audit knowledge — first team to the goal wins!</p>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Pick your category each turn — answer correctly to score, incorrectly to lose points. Steal available on wrong answers!</p>
   </div>
+  <div class="setup-card">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem">
     <div style="background:#EEEDFE;border-radius:var(--border-radius-lg);padding:1rem">
       <div style="font-size:11px;font-weight:500;color:#534AB7;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Team 1</div>
@@ -259,86 +251,130 @@ function setupHTML(){
       <div style="font-size:11px;font-weight:500;color:#BA7517;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Points to win</div>
       <input id="goal" type="number" min="5" max="100" value="${state.goalScore}" style="width:80px;background:#fff;border:1.5px solid #EF9F27;border-radius:var(--border-radius-md);padding:6px 10px;font-size:15px;font-weight:500;color:#412402"/>
     </div>
-    <div style="font-size:12px;color:#854F0B;max-width:160px;line-height:1.4">Easy=1pt · Medium=2pts · Hard=3pts</div>
+    <div style="font-size:12px;color:#854F0B;max-width:180px;line-height:1.5">Easy=1pt · Medium=2pts · Hard=3pts<br>Wrong answer = points deducted<br>Steal = +1pt</div>
   </div>
-  <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem;margin-bottom:1.25rem">
-    <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">Question categories</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">${filterBtns}</div>
-  </div>
-  <button class="btn-primary" id="startBtn" style="width:100%;padding:12px;font-size:16px;font-weight:500;border-radius:var(--border-radius-lg);background:#534AB7;border-color:#3C3489;letter-spacing:0.02em">Let's play! 🚀</button>`;
+  <button class="btn-primary" id="startBtn" style="width:100%;padding:12px;font-size:16px;font-weight:500;border-radius:var(--border-radius-lg);background:#534AB7;border-color:#3C3489;letter-spacing:0.02em">Let's play! 🚀</button>
+  </div>`;
 }
 
 function gameHTML(){
-  if(!state.queue.length) return `<div style="padding:2rem;text-align:center;color:var(--color-text-secondary)">No questions match the selected categories.</div>`;
-  const q=state.queue[state.current];
   const t=state.teams[state.turn];
-  const pct=Math.round((state.current/state.queue.length)*100);
-  const cats={sca:'SCA',dba:'DBA',state:'State',audit:'Audit',gen:'General'};
-  const catClass={sca:'badge-sca',dba:'badge-dba',state:'badge-state',audit:'badge-audit',gen:'badge-gen'};
-  const diffClass={easy:'badge-easy',med:'badge-med',hard:'badge-hard'};
+  const other=state.teams[otherTeam()];
 
-  const optsHTML=q.opts.map((o,i)=>{
-    let cls='opt-btn '+OPT_COLORS[i];
-    if(state.answered){
-      if(i===q.ans) cls='opt-btn correct';
-      else if(i===state.selected&&i!==q.ans) cls='opt-btn wrong';
-    }
-    return `<button class="${cls}" data-i="${i}" ${state.answered?'disabled':''}><span class="opt-letter">${LETTERS[i]}.</span>${o}</button>`;
-  }).join('');
+  // Score header
+  const scoresHTML=`<div class="scores">
+    ${state.teams.map((tm,i)=>`
+      <div class="score-card team${i} ${state.turn===i&&state.phase!=='steal'?'active':''}">
+        <div class="team-name">${tm.name}</div>
+        <div class="team-label">Score</div>
+        <div class="team-score">${tm.score}</div>
+        <div class="goal-note">Goal: ${state.goalScore} pts</div>
+      </div>`).join('')}
+  </div>`;
 
-  let feedbackHTML='';
-  if(state.answered){
-    if(state.forfeited){
-      feedbackHTML=`<div class="feedback forfeit">⏱ Time expired — ${t.name} forfeits this turn. The correct answer was <strong>${LETTERS[q.ans]}: ${q.opts[q.ans]}</strong>.<br><br>${q.exp}</div>`;
-    } else {
-      const correct=state.selected===q.ans;
-      feedbackHTML=`<div class="feedback ${correct?'correct':'wrong'}">${correct?'✓ Correct! ':'✗ Incorrect. '}${q.exp}</div>`;
-    }
+  // PHASE: pick category
+  if(state.phase==='pick'){
+    const cats=Object.keys(CAT_LABELS);
+    const catBtns=cats.map(c=>{
+      const rem=catRemaining(c);
+      const dep=rem===0;
+      return `<button class="cat-btn ${c}" data-cat="${c}" ${dep?'disabled':''}>
+        <span style="font-size:22px">${CAT_ICONS[c]}</span><br>
+        ${CAT_LABELS[c]}
+        ${dep?'<span class="cat-depleted">All done</span>':`<span class="cat-depleted">${rem} left</span>`}
+      </button>`;
+    }).join('');
+    return `${scoresHTML}
+      <div class="turn-banner team${state.turn}">🎯 ${t.name} — pick a category!</div>
+      <div class="cat-grid" style="grid-template-columns:1fr 1fr 1fr">${catBtns}</div>`;
   }
 
-  const nextLabel=state.current<state.queue.length-1?'Next question →':'See results';
-
-  return `
-    <h1>Prevailing Wage Team Trivia</h1>
-    <div class="scores">
-      ${state.teams.map((tm,i)=>`
-        <div class="score-card team${i} ${state.turn===i&&!state.answered?'active':''}">
-          <div class="team-name">${tm.name}</div>
-          <div class="team-label">Score</div>
-          <div class="team-score">${tm.score}</div>
-          <div class="goal-note">Goal: ${state.goalScore} pts</div>
-        </div>`).join('')}
-    </div>
-    <div class="turn-banner team${state.turn}">🎯 ${t.name}'s turn to answer</div>
-
-    ${!state.answered?`
-      <div id="ready-banner" class="ready-banner">
-        📖 Read the question and choices aloud, then click <strong>Start Timer</strong> when ready.
-      </div>
-      <div style="text-align:center;margin-bottom:1rem">
-        <button id="startTimerBtn" class="btn-start-timer">▶ Start Timer</button>
-      </div>
-      <div id="timer-row" class="timer-row" style="display:none">
-        <span id="timer-num" class="timer-num">15</span>
-        <div class="timer-bar-wrap">
-          <div id="timer-bar" class="timer-bar" style="width:100%;background:#534AB7"></div>
+  // PHASE: read / answer
+  if(state.phase==='read'||state.phase==='answered'){
+    const q=state.currentQ;
+    const pts=DIFF_PTS[q.diff];
+    const catClass={sca:'badge-sca',dba:'badge-dba',state:'badge-state',audit:'badge-audit',gen:'badge-gen'};
+    const diffClass={easy:'badge-easy',med:'badge-med',hard:'badge-hard'};
+    const answered=state.phase==='answered';
+    const optsHTML=q.opts.map((o,i)=>{
+      let cls='opt-btn '+OPT_COLORS[i];
+      if(answered){
+        if(i===q.ans) cls='opt-btn correct';
+        else if(i===state.selected&&i!==q.ans) cls='opt-btn wrong';
+      }
+      return `<button class="${cls}" data-i="${i}" ${answered?'disabled':''}><span class="opt-letter">${LETTERS[i]}.</span>${o}</button>`;
+    }).join('');
+    let feedbackHTML='';
+    if(answered&&state.selected!==null){
+      const correct=state.selected===q.ans;
+      feedbackHTML=`<div class="feedback ${correct?'correct':'wrong'}">${correct?`✓ Correct! +${pts} pt${pts>1?'s':''}. `:`✗ Incorrect. -${pts} pt${pts>1?'s':''} from ${t.name}. `}${q.exp}</div>`;
+    }
+    return `${scoresHTML}
+      <div class="turn-banner team${state.turn}">🎯 ${t.name} — ${CAT_ICONS[q.cat]} ${CAT_LABELS[q.cat]} (${q.diff} · ${pts} pt${pts>1?'s':''})</div>
+      ${!answered?`
+        <div id="ready-banner" class="ready-banner">📖 Read the question and choices aloud, then click <strong>Start Timer</strong> when ready.</div>
+        <div style="text-align:center;margin-bottom:1rem"><button id="startTimerBtn" class="btn-start-timer">▶ Start Timer</button></div>
+        <div id="timer-row" class="timer-row" style="display:none">
+          <span id="timer-num" class="timer-num">10</span>
+          <div class="timer-bar-wrap"><div id="timer-bar" class="timer-bar" style="width:100%;background:#534AB7"></div></div>
         </div>
-      </div>
-      <div id="flash-msg" class="flash-msg warning" style="display:none">⏰ Time is up — please select an answer now!</div>
-    `:''}
+        <div id="flash-msg" class="flash-msg warning" style="display:none">⏰ Time is up — please select an answer now!</div>
+      `:''}
+      <div class="q-card">
+        <div class="q-meta">
+          <span class="badge ${catClass[q.cat]}">${CAT_LABELS[q.cat]}</span>
+          <span class="badge ${diffClass[q.diff]}">${q.diff}</span>
+          <span style="font-size:12px;color:var(--color-text-secondary)">Worth ${pts} pt${pts>1?'s':''}</span>
+        </div>
+        <div class="q-text">${q.q}</div>
+        <div class="options">${optsHTML}</div>
+        ${feedbackHTML}
+        ${answered?`<div class="actions"><button class="btn-primary" id="nextBtn">Next turn →</button></div>`:''}
+      </div>`;
+  }
 
-    <div class="progress">Question ${state.current+1} of ${state.queue.length}</div>
-    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-    <div class="q-card">
-      <div class="q-meta">
-        <span class="badge ${catClass[q.cat]}">${cats[q.cat]}</span>
-        <span class="badge ${diffClass[q.diff]}">${q.diff}</span>
-      </div>
-      <div class="q-text">${q.q}</div>
-      <div class="options">${optsHTML}</div>
-      ${feedbackHTML}
-      ${state.answered?`<div class="actions"><button class="btn-primary" id="nextBtn">${nextLabel}</button></div>`:''}
-    </div>`;
+  // PHASE: steal
+  if(state.phase==='steal'||state.phase==='steal-done'){
+    const q=state.currentQ;
+    const catClass={sca:'badge-sca',dba:'badge-dba',state:'badge-state',audit:'badge-audit',gen:'badge-gen'};
+    const diffClass={easy:'badge-easy',med:'badge-med',hard:'badge-hard'};
+    const done=state.phase==='steal-done';
+    const optsHTML=q.opts.map((o,i)=>{
+      let cls='opt-btn '+OPT_COLORS[i];
+      if(done){
+        if(i===q.ans) cls='opt-btn correct';
+        else if(i===state.selected&&i!==q.ans) cls='opt-btn wrong';
+      }
+      return `<button class="${cls}" data-i="${i}" ${done?'disabled':''}><span class="opt-letter">${LETTERS[i]}.</span>${o}</button>`;
+    }).join('');
+    let feedbackHTML='';
+    if(done){
+      if(state.stealResult==='correct') feedbackHTML=`<div class="feedback steal-correct">🔥 Steal! ${other.name} gets 1 point! ${q.exp}</div>`;
+      else if(state.stealResult==='wrong') feedbackHTML=`<div class="feedback no-steal">✗ Steal missed. No points awarded. ${q.exp}</div>`;
+      else feedbackHTML=`<div class="feedback no-steal">⏱ Steal time expired. No points awarded. The correct answer was <strong>${LETTERS[q.ans]}: ${q.opts[q.ans]}</strong>. ${q.exp}</div>`;
+    }
+    return `${scoresHTML}
+      <div class="turn-banner steal">🔥 Steal opportunity — ${other.name}!</div>
+      ${!done?`
+        <div class="steal-banner">⚡ ${other.name} has 5 seconds to steal for 1 point!</div>
+        <div class="timer-row">
+          <span id="timer-num" class="timer-num">${timerSec||5}</span>
+          <div class="timer-bar-wrap"><div id="timer-bar" class="timer-bar" style="width:${Math.round((timerSec/5)*100)}%;background:#D85A30"></div></div>
+        </div>
+      `:''}
+      <div class="q-card">
+        <div class="q-meta">
+          <span class="badge ${catClass[q.cat]}">${CAT_LABELS[q.cat]}</span>
+          <span class="badge ${diffClass[q.diff]}">${q.diff}</span>
+        </div>
+        <div class="q-text">${q.q}</div>
+        <div class="options">${optsHTML}</div>
+        ${feedbackHTML}
+        ${done?`<div class="actions"><button class="btn-primary" id="nextBtn">Next turn →</button></div>`:''}
+      </div>`;
+  }
+
+  return '';
 }
 
 function winnerHTML(){
@@ -364,7 +400,6 @@ function winnerHTML(){
     .conf-piece{position:absolute;top:-60px;animation:drop linear infinite;pointer-events:none}
     .winner-box{animation:popIn 0.6s cubic-bezier(.17,.89,.32,1.28) forwards}
     .winner-name{animation:pulse 1.5s ease-in-out infinite}
-    .score-pill{display:inline-block;padding:6px 18px;border-radius:20px;font-size:14px;font-weight:500;margin:4px}
   </style>
   <div style="position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#EEEDFE 0%,#E1F5EE 100%);border-radius:var(--border-radius-lg);padding:2rem 1rem">
     <div style="position:absolute;inset:0;pointer-events:none">${conf}</div>
@@ -392,85 +427,159 @@ function winnerHTML(){
   </div>`;
 }
 
+function checkWin(){
+  for(let i=0;i<2;i++){
+    if(state.teams[i].score>=state.goalScore){
+      stopTimer();
+      render();
+      setTimeout(()=>{state.screen='winner';render();},2200);
+      return true;
+    }
+  }
+  return false;
+}
+
+function triggerSteal(){
+  stopTimer();
+  state.phase='steal';
+  state.selected=null;
+  render();
+  timerPhase='steal';
+  timerSec=5;
+  updateTimerUI();
+  startTimer(5,()=>{
+    state.stealResult='expired';
+    state.phase='steal-done';
+    render();
+  });
+}
+
+function advanceTurn(){
+  state.turn=otherTeam();
+  state.phase='pick';
+  state.currentQ=null;
+  state.selected=null;
+  state.stealResult=null;
+  timerStarted=false;
+}
+
 function attachEvents(){
+  // Setup
   const startBtn=document.getElementById('startBtn');
   if(startBtn){
     startBtn.onclick=()=>{
       state.teams[0].name=document.getElementById('t1').value||'Team A';
       state.teams[1].name=document.getElementById('t2').value||'Team B';
       state.goalScore=parseInt(document.getElementById('goal').value)||15;
-      state.teams[0].score=0;
-      state.teams[1].score=0;
-      state.turn=0;
-      buildQueue();
-      state.screen='game';
-      state.answered=false;
-      state.forfeited=false;
+      state.teams[0].score=0;state.teams[1].score=0;
+      state.usedIds=new Set();
+      state.turn=0;state.phase='pick';state.currentQ=null;state.selected=null;
+      state.screen='game';timerStarted=false;
+      render();
+    };
+  }
+
+  // Category pick
+  document.querySelectorAll('.cat-btn').forEach(btn=>{
+    btn.onclick=()=>{
+      const cat=btn.dataset.cat;
+      const q=randomFromCat(cat);
+      if(!q) return;
+      state.usedIds.add(q.q);
+      state.currentQ=q;
+      state.phase='read';
       state.selected=null;
       timerStarted=false;
       render();
     };
-  }
-
-  document.querySelectorAll('.filter-btn').forEach(btn=>{
-    btn.onclick=()=>{
-      state.filters[btn.dataset.cat]=!state.filters[btn.dataset.cat];
-      render();
-    };
   });
 
+  // Start timer
   const startTimerBtn=document.getElementById('startTimerBtn');
   if(startTimerBtn){
-    startTimerBtn.onclick=()=>{ startMainTimer(); };
+    startTimerBtn.onclick=()=>{
+      if(timerStarted) return;
+      timerStarted=true;
+      document.getElementById('startTimerBtn').style.display='none';
+      document.getElementById('ready-banner').style.display='none';
+      document.getElementById('timer-row').style.display='flex';
+      timerPhase='main';timerSec=10;
+      updateTimerUI();
+      startTimer(10,()=>{
+        // time up — show flash then auto-steal
+        const flash=document.getElementById('flash-msg');
+        if(flash) flash.style.display='block';
+        setTimeout(()=>triggerSteal(),1200);
+      });
+    };
   }
 
-  document.querySelectorAll('.opt-btn').forEach(btn=>{
-    btn.onclick=()=>{
-      if(state.answered) return;
-      stopTimer();
-      const i=parseInt(btn.dataset.i);
-      state.selected=i;
-      state.answered=true;
-      state.forfeited=false;
-      if(i===state.queue[state.current].ans){
-        const diff=state.queue[state.current].diff;
-        const pts=diff==='easy'?1:diff==='med'?2:3;
-        state.teams[state.turn].score+=pts;
-        if(state.teams[state.turn].score>=state.goalScore){
+  // Answer buttons (main turn)
+  if(state.phase==='read'){
+    document.querySelectorAll('.opt-btn').forEach(btn=>{
+      btn.onclick=()=>{
+        if(state.phase!=='read') return;
+        stopTimer();
+        const i=parseInt(btn.dataset.i);
+        state.selected=i;
+        const q=state.currentQ;
+        const pts=DIFF_PTS[q.diff];
+        if(i===q.ans){
+          state.teams[state.turn].score+=pts;
+          state.phase='answered';
           render();
-          setTimeout(()=>{state.screen='winner';render();},2200);
-          return;
+          checkWin();
+        } else {
+          state.teams[state.turn].score=Math.max(0,state.teams[state.turn].score-pts);
+          state.phase='answered';
+          render();
+          // Trigger steal after a moment
+          setTimeout(()=>triggerSteal(),1800);
         }
-      }
-      render();
-    };
-  });
+      };
+    });
+  }
 
+  // Answer buttons (steal turn)
+  if(state.phase==='steal'){
+    document.querySelectorAll('.opt-btn').forEach(btn=>{
+      btn.onclick=()=>{
+        if(state.phase!=='steal') return;
+        stopTimer();
+        const i=parseInt(btn.dataset.i);
+        state.selected=i;
+        const q=state.currentQ;
+        if(i===q.ans){
+          state.stealResult='correct';
+          state.teams[otherTeam()].score+=1;
+          state.phase='steal-done';
+          render();
+          checkWin();
+        } else {
+          state.stealResult='wrong';
+          state.phase='steal-done';
+          render();
+        }
+      };
+    });
+  }
+
+  // Next turn
   const nextBtn=document.getElementById('nextBtn');
   if(nextBtn){
     nextBtn.onclick=()=>{
-      if(state.current>=state.queue.length-1){
-        state.screen='winner';
-        stopTimer();
-      } else {
-        state.current++;
-        state.turn=1-state.turn;
-        state.selected=null;
-        state.answered=false;
-        state.forfeited=false;
-        timerStarted=false;
-      }
+      advanceTurn();
       render();
     };
   }
 
+  // Restart
   const restartBtn=document.getElementById('restartBtn');
   if(restartBtn){
     restartBtn.onclick=()=>{
       stopTimer();
-      state={screen:'setup',teams:[{name:'Team A',score:0},{name:'Team B',score:0}],queue:[],current:0,turn:0,selected:null,answered:false,forfeited:false,goalScore:15,filters:{sca:true,dba:true,state:true,audit:true,gen:true}};
-      timerStarted=false;
-      render();
+      state={screen:'setup',teams:[{name:'Team A',score:0},{name:'Team B',score:0}],usedIds:new Set(),catCounts:{sca:0,dba:0,state:0,audit:0,gen:0},currentQ:null,current:0,turn:0,selected:null,phase:'pick',stealResult:null,goalScore:15};
+      timerStarted=false;render();
     };
   }
 }
