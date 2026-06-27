@@ -445,9 +445,9 @@ function triggerSteal(){
   state.selected=null;
   render();
   timerPhase='steal';
-  timerSec=5;
+  timerSec=10;
   updateTimerUI();
-  startTimer(5,()=>{
+  startTimer(10,()=>{
     state.stealResult='expired';
     state.phase='steal-done';
     render();
