@@ -1,10 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prevailing Wage Team Trivia</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:var(--font-sans);color:var(--color-text-primary);padding:1rem;background:var(--color-background-tertiary)}
-  h1{font-size:22px;font-weight:500;margin-bottom:4px}
+  body{font-family:system-ui,sans-serif;color:#1a1a1a;padding:1rem;background:#f5f5f3}
 
   .scores{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.25rem}
-  .score-card{border-radius:var(--border-radius-lg);padding:1rem 1.25rem;text-align:center;border:2px solid transparent;transition:border-color 0.2s}
+  .score-card{border-radius:12px;padding:1rem 1.25rem;text-align:center;border:2px solid transparent;transition:border-color 0.2s}
   .score-card.team0{background:#EEEDFE;color:#26215C}
   .score-card.team1{background:#E1F5EE;color:#04342C}
   .score-card.active.team0{border-color:#534AB7}
@@ -14,13 +19,13 @@
   .team-score{font-size:32px;font-weight:500}
   .goal-note{font-size:11px;opacity:0.65;margin-top:4px}
 
-  .turn-banner{border-radius:var(--border-radius-md);padding:9px 14px;font-size:14px;font-weight:500;margin-bottom:1rem;text-align:center}
+  .turn-banner{border-radius:8px;padding:9px 14px;font-size:14px;font-weight:500;margin-bottom:1rem;text-align:center}
   .turn-banner.team0{background:#534AB7;color:#fff}
   .turn-banner.team1{background:#0F6E56;color:#fff}
   .turn-banner.steal{background:#D85A30;color:#fff}
 
-  .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
-  .cat-btn{border-radius:var(--border-radius-md);padding:14px 12px;font-size:14px;font-weight:500;cursor:pointer;border:2px solid transparent;text-align:center;transition:filter 0.15s}
+  .cat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1rem}
+  .cat-btn{border-radius:8px;padding:14px 12px;font-size:14px;font-weight:500;cursor:pointer;border:2px solid transparent;text-align:center;transition:filter 0.15s}
   .cat-btn:hover:not(:disabled){filter:brightness(0.9)}
   .cat-btn:disabled{cursor:default;opacity:0.4;filter:grayscale(0.5)}
   .cat-btn.sca{background:#E6F1FB;color:#0C447C;border-color:#7BB8EC}
@@ -30,21 +35,24 @@
   .cat-btn.gen{background:#F1EFE8;color:#444441;border-color:#C5C3BB}
   .cat-depleted{font-size:10px;display:block;margin-top:3px;opacity:0.6}
 
+  /* Main answer timer */
   .timer-row{display:flex;align-items:center;gap:12px;margin-bottom:0.75rem}
   .timer-num{font-size:22px;font-weight:500;min-width:36px;text-align:center;transition:color 0.3s}
   .timer-num.urgent{color:#D85A30}
-  .timer-bar-wrap{flex:1;height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden}
+  .timer-bar-wrap{flex:1;height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden}
   .timer-bar{height:8px;border-radius:4px;transition:width 0.9s linear,background 0.3s}
 
-  .flash-msg{border-radius:var(--border-radius-md);padding:10px 14px;font-size:14px;font-weight:500;text-align:center;margin-bottom:0.75rem;animation:flashpulse 0.5s ease-in-out infinite alternate}
+  /* Grace period flash */
+  .flash-msg{border-radius:8px;padding:10px 14px;font-size:14px;font-weight:500;text-align:center;margin-bottom:0.75rem;animation:flashpulse 0.5s ease-in-out infinite alternate}
   .flash-msg.warning{background:#FAECE7;color:#712B13;border:1.5px solid #D85A30}
   @keyframes flashpulse{from{opacity:1}to{opacity:0.55}}
 
-  .steal-banner{background:#FAEEDA;border:2px solid #EF9F27;border-radius:var(--border-radius-md);padding:12px 16px;text-align:center;margin-bottom:1rem;font-size:14px;font-weight:500;color:#412402}
+  /* Steal banner */
+  .steal-banner{background:#FAEEDA;border:2px solid #EF9F27;border-radius:8px;padding:12px 16px;text-align:center;margin-bottom:1rem;font-size:14px;font-weight:500;color:#412402}
 
-  .q-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+  .q-card{background:#fff;border:0.5px solid #d0d0d0;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
   .q-meta{font-size:12px;margin-bottom:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .badge{padding:2px 9px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500}
+  .badge{padding:2px 9px;border-radius:6px;font-size:11px;font-weight:500}
   .badge-sca{background:#E6F1FB;color:#0C447C}
   .badge-dba{background:#E1F5EE;color:#085041}
   .badge-state{background:#EEEDFE;color:#3C3489}
@@ -54,9 +62,9 @@
   .badge-med{background:#FAEEDA;color:#633806}
   .badge-easy{background:#EAF3DE;color:#27500A}
 
-  .q-text{font-size:18px;font-weight:500;margin-bottom:1.1rem;line-height:1.6;font-family:Georgia,var(--font-serif),serif}
+  .q-text{font-size:18px;font-weight:500;margin-bottom:1.1rem;line-height:1.6;font-family:Georgia,serif}
   .options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .opt-btn{border-radius:var(--border-radius-md);padding:13px 14px;font-size:15px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s;border:1.5px solid transparent;font-family:var(--font-sans);line-height:1.45}
+  .opt-btn{border-radius:8px;padding:13px 14px;font-size:15px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s;border:1.5px solid transparent;font-family:system-ui,sans-serif;line-height:1.45}
   .opt-btn.a{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
   .opt-btn.b{background:#E1F5EE;color:#085041;border-color:#5DCAA5}
   .opt-btn.c{background:#FAEEDA;color:#633806;border-color:#EF9F27}
@@ -67,38 +75,35 @@
   .opt-btn:disabled{cursor:default;opacity:0.85}
   .opt-letter{font-weight:500;margin-right:8px;font-size:14px}
 
-  .feedback{margin-top:1rem;padding:10px 12px;border-radius:var(--border-radius-md);font-size:13px;line-height:1.55}
+  .feedback{margin-top:1rem;padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.55}
   .feedback.correct{background:#EAF3DE;color:#27500A;border-left:3px solid #639922}
   .feedback.wrong{background:#FCEBEB;color:#501313;border-left:3px solid #A32D2D}
   .feedback.steal-correct{background:#FAEEDA;color:#412402;border-left:3px solid #EF9F27}
   .feedback.no-steal{background:#FCEBEB;color:#501313;border-left:3px solid #A32D2D}
 
   .actions{display:flex;gap:8px;margin-top:1rem}
-  button{background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:8px 16px;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
-  button:hover{background:var(--color-background-secondary)}
+  button{background:transparent;border:0.5px solid #ccc;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;color:#1a1a1a}
+  button:hover{background:#eee}
   button:active{transform:scale(0.98)}
   .btn-primary{background:#534AB7;border-color:#3C3489;color:#fff}
   .btn-primary:hover{background:#3C3489}
-  .btn-start-timer{background:#0F6E56;border-color:#085041;color:#fff;font-size:15px;padding:10px 24px;border-radius:var(--border-radius-md)}
+  .btn-start-timer{background:#0F6E56;border-color:#085041;color:#fff;font-size:15px;padding:10px 24px;border-radius:8px}
   .btn-start-timer:hover{background:#085041}
 
-  .progress{font-size:12px;color:var(--color-text-secondary);margin-bottom:0.5rem}
-  .progress-bar{height:5px;background:var(--color-background-secondary);border-radius:3px;margin-bottom:1.25rem}
+  .progress{font-size:12px;color:#666;margin-bottom:0.5rem}
+  .progress-bar{height:5px;background:#e0e0e0;border-radius:3px;margin-bottom:1.25rem}
   .progress-fill{height:5px;background:#534AB7;border-radius:3px;transition:width 0.3s}
 
-  .ready-banner{background:#E1F5EE;color:#04342C;border:1.5px solid #5DCAA5;border-radius:var(--border-radius-md);padding:12px 16px;text-align:center;margin-bottom:1rem;font-size:14px;line-height:1.5}
-
-  .setup-card{max-width:100%}
-  .setup-card input{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary)}
-
+  .ready-banner{background:#E1F5EE;color:#04342C;border:1.5px solid #5DCAA5;border-radius:8px;padding:12px 16px;text-align:center;margin-bottom:1rem;font-size:14px;line-height:1.5}
   .score-pill{display:inline-block;padding:6px 18px;border-radius:20px;font-size:14px;font-weight:500;margin:4px}
 </style>
-
+</head>
+<body>
 <div id="app"></div>
-
 <script>
-const ALL_QUESTIONS = [
-  // SCA
+/* ── Question bank ─────────────────────────────────────────────────────── */
+const ALL_QUESTIONS=[
+  // SCA (10)
   {q:"Which federal law establishes prevailing wage requirements for federal service contracts?",opts:["Davis-Bacon Act","Service Contract Act","Fair Labor Standards Act","Walsh-Healey Act"],ans:1,cat:"sca",diff:"easy",exp:"The Service Contract Act (SCA), enacted in 1965, requires contractors on federal service contracts exceeding $2,500 to pay locally prevailing wages and fringe benefits."},
   {q:"Which agency administers and enforces the Service Contract Act?",opts:["EEOC","DOL Wage and Hour Division","OFCCP","NLRB"],ans:1,cat:"sca",diff:"easy",exp:"The Wage and Hour Division (WHD) of the Department of Labor administers and enforces the SCA."},
   {q:"What is the minimum contract value threshold that triggers SCA coverage?",opts:["$500","$2,500","$10,000","$25,000"],ans:1,cat:"sca",diff:"med",exp:"The SCA applies to federal service contracts exceeding $2,500 where the principal purpose is to furnish services in the United States through service employees."},
@@ -109,7 +114,7 @@ const ALL_QUESTIONS = [
   {q:"What is the SCA health and welfare (H&W) benefit rate based on?",opts:["The contractor's location","A nationally uniform rate set annually by the DOL WHD","The local collective bargaining agreement rate","The federal poverty level"],ans:1,cat:"sca",diff:"med",exp:"The SCA H&W rate is a nationally uniform rate set by the DOL WHD and updated periodically. It applies to all hours paid (up to 40/week) unless a higher local rate applies."},
   {q:"Which employees are generally exempt from SCA coverage?",opts:["Part-time workers","Bona fide executive, administrative, or professional employees","Workers earning tips","Seasonal workers"],ans:1,cat:"sca",diff:"med",exp:"Bona fide executive, administrative, and professional employees who meet the FLSA salary and duties tests are generally exempt from SCA wage requirements."},
   {q:"What must a contractor do if a required SCA Wage Determination was not incorporated into the contract at award?",opts:["Ignore it — no WD means no obligation","Request a conformance for all workers","Notify the contracting agency and seek a contract modification to incorporate the correct WD","Wait until the next contract renewal"],ans:2,cat:"sca",diff:"hard",exp:"If a WD was omitted from a contract, the contractor must notify the contracting agency, which is responsible for incorporating the correct WD via contract modification. The contractor is still obligated to pay the applicable rates."},
-  // DBA
+  // DBA (8)
   {q:"The Davis-Bacon Act applies to which type of federal contracts?",opts:["Service and maintenance contracts","Construction contracts over $2,000","Supply and manufacturing contracts","All federal contracts over $10,000"],ans:1,cat:"dba",diff:"easy",exp:"The Davis-Bacon Act covers contracts for construction, alteration, or repair of federal or federally assisted buildings over $2,000."},
   {q:"Under the Davis-Bacon Act, what must contractors submit to document wage compliance?",opts:["I-9 forms","Certified Payroll Reports","W-2 forms","Wage Determination Requests"],ans:1,cat:"dba",diff:"easy",exp:"Certified Payroll Reports (CPRs), typically on WH-347 forms, document workers' classifications, hours, wages, and deductions for DBA compliance."},
   {q:"Which system is the official source for Davis-Bacon Wage Determinations?",opts:["SAP","SAM.gov","Wage.gov","OFCCP portal"],ans:1,cat:"dba",diff:"med",exp:"Davis-Bacon and SCA Wage Determinations are accessed through SAM.gov, the official federal procurement and compliance system."},
@@ -118,7 +123,7 @@ const ALL_QUESTIONS = [
   {q:"Under DBA, the wage rate paid must be at least the rate for which labor classification?",opts:["The most common classification on the project","The classification whose duties most closely match the work actually performed","The lowest-paid classification on the WD","The classification requested by the worker"],ans:1,cat:"dba",diff:"med",exp:"Workers must be classified and paid according to the classification whose duties most closely match the work they actually perform, regardless of job title assigned by the employer."},
   {q:"How frequently must Davis-Bacon certified payroll reports typically be submitted?",opts:["Daily","Weekly","Monthly","Only at project completion"],ans:1,cat:"dba",diff:"easy",exp:"DBA certified payroll reports must be submitted weekly to the contracting agency, covering the prior week's payroll data for all covered workers on the project."},
   {q:"Under DBA, what is the overtime standard for covered construction workers?",opts:["Time-and-a-half after 8 hours per day","Time-and-a-half after 40 hours per week under CWHSSA","Double time after 10 hours per day","No overtime requirement — only straight time prevailing rates apply"],ans:1,cat:"dba",diff:"med",exp:"DBA itself does not contain an overtime provision, but the Contract Work Hours and Safety Standards Act (CWHSSA) requires time-and-a-half for hours over 40 per week on covered federal contracts."},
-  // STATE
+  // STATE (14)
   {q:"Which state was among the first to enact its own 'Little Davis-Bacon' prevailing wage law?",opts:["Texas","California","Kansas","New York"],ans:3,cat:"state",diff:"med",exp:"New York enacted one of the earliest state prevailing wage laws in 1894, predating the federal Davis-Bacon Act by nearly 40 years."},
   {q:"Approximately how many U.S. states currently have their own prevailing wage laws covering public works?",opts:["All 50 states","Approximately 30 states","Approximately 20 states","Only the 10 most populous states"],ans:1,cat:"state",diff:"med",exp:"Approximately 30 states (plus DC) have enacted their own prevailing wage laws, though scope and thresholds vary widely."},
   {q:"California's prevailing wage law is administered by which agency?",opts:["California Labor Commissioner's Office","California Department of Industrial Relations (DIR)","California Department of Finance","California Public Utilities Commission"],ans:1,cat:"state",diff:"easy",exp:"California's prevailing wage program is administered by the DIR, specifically through the Division of Labor Standards Enforcement and the Public Works Unit."},
@@ -133,7 +138,7 @@ const ALL_QUESTIONS = [
   {q:"Washington State's prevailing wage law is administered by which agency?",opts:["Washington State Department of Commerce","Washington State Department of Labor & Industries","Washington State Office of Financial Management","Washington State Auditor's Office"],ans:1,cat:"state",diff:"med",exp:"Washington State's prevailing wage program is administered by the Department of Labor & Industries (L&I), which sets and publishes prevailing wage rates by county and trade."},
   {q:"How do most states determine their prevailing wage rates?",opts:["They adopt the federal Davis-Bacon rates directly","They conduct surveys of wages paid to workers in the area or rely on collective bargaining data","They use the federal minimum wage as the baseline","They allow contractors to self-report what they pay"],ans:1,cat:"state",diff:"med",exp:"Most states determine prevailing wage rates through periodic surveys of wages paid in the locality, or by referencing collective bargaining agreements, similar to the federal methodology under DBA."},
   {q:"Which of the following best describes a 'little SCA' or state service contract law?",opts:["A state law requiring service contractors to pay a living wage on all private contracts","A state or local law requiring prevailing wages on service contracts funded by state or local government","A federal regulation extending SCA to state-funded contracts","An executive order requiring unions on all public projects"],ans:1,cat:"state",diff:"hard",exp:"Some states and localities have enacted laws similar to the federal SCA that require service contractors on state or locally funded contracts to pay prevailing wages — often called 'little SCA' laws."},
-  // AUDIT
+  // AUDIT (12)
   {q:"What is the primary objective of a prevailing wage compliance audit?",opts:["To verify the contractor's profit margins","To ensure workers were paid required wages, benefits, and that records are accurate","To assess environmental compliance on public projects","To review contractor bonding and insurance"],ans:1,cat:"audit",diff:"easy",exp:"A prevailing wage audit primarily verifies that covered workers received at least the required wage rates and fringe benefits, and that payroll records accurately reflect hours worked and wages paid."},
   {q:"Which document is the starting point for auditing Davis-Bacon wage compliance on a specific project?",opts:["The contractor's W-2 forms","The applicable Wage Determination incorporated into the contract","The contractor's union agreement","The DOL debarment list"],ans:1,cat:"audit",diff:"easy",exp:"The Wage Determination incorporated into the contract establishes the minimum rates and classifications required. Auditors compare certified payroll records against those rates."},
   {q:"What is 'back wage liability' in a prevailing wage audit?",opts:["Wages owed to future workers","The difference between wages actually paid and wages required under the applicable WD","Penalties assessed against subcontractors","Overtime owed under the FLSA"],ans:1,cat:"audit",diff:"easy",exp:"Back wage liability is the amount owed to workers when they were paid less than the applicable prevailing wage rate."},
@@ -146,7 +151,7 @@ const ALL_QUESTIONS = [
   {q:"What is an 'entrance conference' in the context of a prevailing wage audit?",opts:["A meeting where DOL announces debarment findings","The opening meeting between auditors and the contractor to explain scope and request records","A job site walk-through to verify worker classifications","A meeting with the contracting agency to review contract terms"],ans:1,cat:"audit",diff:"med",exp:"The entrance conference is the initial audit meeting where auditors explain the scope, identify records needed, and set expectations for the review process."},
   {q:"Which of the following is a red flag for prevailing wage noncompliance during an audit?",opts:["All workers listed under the same single occupation on a diverse project","Certified payroll hours match daily sign-in logs","Workers paid exactly the WD rate","Fringe benefits provided through a bona fide plan"],ans:0,cat:"audit",diff:"hard",exp:"When all workers on a diverse project are listed under one classification, it may indicate misclassification to avoid higher rates for skilled trades — a common audit red flag."},
   {q:"What is the significance of the 'Statement of Compliance' on a certified payroll report?",opts:["Confirms the contractor has no outstanding violations","The contractor's signed certification under penalty of law that payroll information is accurate","Verifies all workers are union members","Documents that the contracting officer reviewed and approved the payroll"],ans:1,cat:"audit",diff:"med",exp:"The Statement of Compliance is signed under penalty of law affirming payroll information is true and complete. False statements can result in criminal liability under 18 U.S.C. § 1001."},
-  // GENERAL
+  // GENERAL (10)
   {q:"What is a 'conformance' under prevailing wage law?",opts:["A contractor's agreement to follow audit findings","Adding a new job classification not listed on a Wage Determination","A type of certified payroll error","A DOL debarment action"],ans:1,cat:"gen",diff:"med",exp:"A conformance is the process by which a contractor requests DOL approval to establish a wage rate for a job classification not listed on the applicable Wage Determination."},
   {q:"What is 'debarment' in the context of prevailing wage enforcement?",opts:["A formal DOL warning letter","Exclusion from federal contract awards for up to 3 years","An audit finding requiring back wages only","A civil monetary penalty under FLSA"],ans:1,cat:"gen",diff:"hard",exp:"Debarment places a contractor on the Debarred Parties List, excluding them from federal contracts for up to 3 years for willful or aggravated violations under the SCA or DBA."},
   {q:"What is the primary difference between the SCA and the Davis-Bacon Act in terms of the work they cover?",opts:["SCA covers construction; DBA covers services","SCA covers service work (janitorial, security, IT support); DBA covers construction and renovation","SCA applies only to defense contracts; DBA applies to all federal contracts","There is no difference — both cover the same types of work"],ans:1,cat:"gen",diff:"easy",exp:"The SCA covers service employees performing work like janitorial, security, food service, and IT support on federal contracts, while DBA covers laborers and mechanics on federal construction projects."},
@@ -159,274 +164,105 @@ const ALL_QUESTIONS = [
   {q:"What is the purpose of the DOL's 'All Agency Memoranda' (AAMs) in the context of SCA?",opts:["They set new federal minimum wage rates","They provide guidance and policy clarifications on SCA administration and fringe benefit compliance","They list all debarred contractors","They establish certified payroll reporting deadlines"],ans:1,cat:"gen",diff:"hard",exp:"AAMs are issued by the DOL Wage and Hour Division to provide guidance to contracting agencies and contractors on SCA policy, including how to handle fringe benefit contributions, H&W rates, and other compliance questions."},
 ];
 
+/* ── Constants ─────────────────────────────────────────────────────────── */
 const LETTERS=['A','B','C','D'];
 const OPT_COLORS=['a','b','c','d'];
 const CAT_LABELS={sca:'SCA',dba:'DBA',state:'State Laws',audit:'Audit',gen:'General'};
 const CAT_ICONS={sca:'📋',dba:'🏗️',state:'🗺️',audit:'🔍',gen:'⚖️'};
 const DIFF_PTS={easy:1,med:2,hard:3};
 
-let timer=null,timerPhase='none',timerSec=0,timerStarted=false;
+/* ── Timer state (module-level, never inside state object) ─────────────── */
+let timerInterval=null;
+let timerPhase='none'; // 'none' | 'main' | 'grace' | 'steal'
+let timerSec=0;
+let timerStarted=false;
 
+/* ── Game state ────────────────────────────────────────────────────────── */
 let state={
   screen:'setup',
   teams:[{name:'Team A',score:0},{name:'Team B',score:0}],
   usedIds:new Set(),
-  catCounts:{sca:0,dba:0,state:0,audit:0,gen:0},
   currentQ:null,
-  current:0,
-  turn:0,
+  turn:0,          // 0 or 1 — index of active team
+  phase:'pick',    // 'pick' | 'read' | 'answered' | 'steal' | 'steal-done'
   selected:null,
-  phase:'pick', // 'pick' | 'read' | 'steal' | 'done'
   stealResult:null,
   goalScore:15,
 };
 
-function catTotal(cat){return ALL_QUESTIONS.filter(q=>q.cat===cat).length;}
+/* ── Helpers ───────────────────────────────────────────────────────────── */
+function otherTeam(){return 1-state.turn;}
 function catRemaining(cat){return ALL_QUESTIONS.filter(q=>q.cat===cat&&!state.usedIds.has(q.q)).length;}
 function randomFromCat(cat){
   const pool=ALL_QUESTIONS.filter(q=>q.cat===cat&&!state.usedIds.has(q.q));
-  if(!pool.length) return null;
-  return pool[Math.floor(Math.random()*pool.length)];
+  return pool.length?pool[Math.floor(Math.random()*pool.length)]:null;
 }
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function stopTimer(){clearInterval(timer);timer=null;timerPhase='none';timerStarted=false;}
-function otherTeam(){return 1-state.turn;}
 
-function startTimer(sec, onDone){
-  stopTimer();
-  timerStarted=true;
-  timerPhase='main';
-  timerSec=sec;
-  updateTimerUI();
-  timer=setInterval(()=>{
+/* ── Timer engine ──────────────────────────────────────────────────────── */
+function stopTimer(){
+  clearInterval(timerInterval);
+  timerInterval=null;
+  timerPhase='none';
+  timerStarted=false;
+}
+
+// totalSec: full duration for this phase (used to compute bar %)
+function runTimer(totalSec,onTick,onDone){
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
     timerSec--;
-    updateTimerUI();
-    if(timerSec<=0){clearInterval(timer);timer=null;timerStarted=false;onDone();}
+    onTick();
+    if(timerSec<=0){clearInterval(timerInterval);timerInterval=null;onDone();}
   },1000);
 }
 
-function updateTimerUI(){
+function updateMainTimerUI(){
   const numEl=document.getElementById('timer-num');
   const barEl=document.getElementById('timer-bar');
   if(!numEl||!barEl) return;
-  const total=timerPhase==='steal'?10:timerPhase==='grace'?5:10;
-  const pct=Math.round((timerSec/total)*100);
+  // total seconds for the current phase
+  const total=timerPhase==='grace'?5:10;
   numEl.textContent=timerSec;
   numEl.className='timer-num'+(timerSec<=3?' urgent':'');
+  const pct=Math.max(0,Math.round((timerSec/total)*100));
   const color=timerSec<=3?'#D85A30':timerSec<=6?'#BA7517':'#534AB7';
   barEl.style.width=pct+'%';
   barEl.style.background=color;
 }
 
-function render(){
-  const app=document.getElementById('app');
-  if(state.screen==='setup') app.innerHTML=setupHTML();
-  else if(state.screen==='game') app.innerHTML=gameHTML();
-  else app.innerHTML=winnerHTML();
-  attachEvents();
-  if(state.screen!=='game') stopTimer();
+function updateStealTimerUI(){
+  const numEl=document.getElementById('timer-num');
+  const barEl=document.getElementById('timer-bar');
+  if(!numEl||!barEl) return;
+  numEl.textContent=timerSec;
+  numEl.className='timer-num'+(timerSec<=3?' urgent':'');
+  const pct=Math.max(0,Math.round((timerSec/10)*100));
+  barEl.style.width=pct+'%';
+  barEl.style.background=timerSec<=3?'#A32D2D':'#D85A30';
 }
 
-function setupHTML(){
-  return `
-  <div style="text-align:center;padding:1.5rem 1rem 0.5rem">
-    <div style="font-size:48px;margin-bottom:8px">🏛️⚖️</div>
-    <h1 style="font-size:24px;font-weight:500;color:#534AB7;margin-bottom:6px">Prevailing Wage Team Trivia</h1>
-    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Pick your category each turn — answer correctly to score, incorrectly to lose points. Steal available on wrong answers!</p>
-  </div>
-  <div class="setup-card">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem">
-    <div style="background:#EEEDFE;border-radius:var(--border-radius-lg);padding:1rem">
-      <div style="font-size:11px;font-weight:500;color:#534AB7;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Team 1</div>
-      <input id="t1" value="${state.teams[0].name}" maxlength="30" style="width:100%;background:#fff;border:1.5px solid #AFA9EC;border-radius:var(--border-radius-md);padding:8px 10px;font-size:14px;color:#26215C;font-weight:500"/>
-    </div>
-    <div style="background:#E1F5EE;border-radius:var(--border-radius-lg);padding:1rem">
-      <div style="font-size:11px;font-weight:500;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Team 2</div>
-      <input id="t2" value="${state.teams[1].name}" maxlength="30" style="width:100%;background:#fff;border:1.5px solid #5DCAA5;border-radius:var(--border-radius-md);padding:8px 10px;font-size:14px;color:#04342C;font-weight:500"/>
-    </div>
-  </div>
-  <div style="background:#FAEEDA;border-radius:var(--border-radius-lg);padding:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:12px">
-    <div style="font-size:24px">🎯</div>
-    <div style="flex:1">
-      <div style="font-size:11px;font-weight:500;color:#BA7517;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Points to win</div>
-      <input id="goal" type="number" min="5" max="100" value="${state.goalScore}" style="width:80px;background:#fff;border:1.5px solid #EF9F27;border-radius:var(--border-radius-md);padding:6px 10px;font-size:15px;font-weight:500;color:#412402"/>
-    </div>
-    <div style="font-size:12px;color:#854F0B;max-width:180px;line-height:1.5">Easy=1pt · Medium=2pts · Hard=3pts<br>Wrong answer = points deducted<br>Steal = +1pt</div>
-  </div>
-  <button class="btn-primary" id="startBtn" style="width:100%;padding:12px;font-size:16px;font-weight:500;border-radius:var(--border-radius-lg);background:#534AB7;border-color:#3C3489;letter-spacing:0.02em">Let's play! 🚀</button>
-  </div>`;
-}
-
-function gameHTML(){
-  const t=state.teams[state.turn];
-  const other=state.teams[otherTeam()];
-
-  // Score header
-  const scoresHTML=`<div class="scores">
-    ${state.teams.map((tm,i)=>`
-      <div class="score-card team${i} ${state.turn===i&&state.phase!=='steal'?'active':''}">
-        <div class="team-name">${tm.name}</div>
-        <div class="team-label">Score</div>
-        <div class="team-score">${tm.score}</div>
-        <div class="goal-note">Goal: ${state.goalScore} pts</div>
-      </div>`).join('')}
-  </div>`;
-
-  // PHASE: pick category
-  if(state.phase==='pick'){
-    const cats=Object.keys(CAT_LABELS);
-    const catBtns=cats.map(c=>{
-      const rem=catRemaining(c);
-      const dep=rem===0;
-      return `<button class="cat-btn ${c}" data-cat="${c}" ${dep?'disabled':''}>
-        <span style="font-size:22px">${CAT_ICONS[c]}</span><br>
-        ${CAT_LABELS[c]}
-        ${dep?'<span class="cat-depleted">All done</span>':`<span class="cat-depleted">${rem} left</span>`}
-      </button>`;
-    }).join('');
-    return `${scoresHTML}
-      <div class="turn-banner team${state.turn}">🎯 ${t.name} — pick a category!</div>
-      <div class="cat-grid" style="grid-template-columns:1fr 1fr 1fr">${catBtns}</div>`;
-  }
-
-  // PHASE: read / answer
-  if(state.phase==='read'||state.phase==='answered'){
-    const q=state.currentQ;
-    const pts=DIFF_PTS[q.diff];
-    const catClass={sca:'badge-sca',dba:'badge-dba',state:'badge-state',audit:'badge-audit',gen:'badge-gen'};
-    const diffClass={easy:'badge-easy',med:'badge-med',hard:'badge-hard'};
-    const answered=state.phase==='answered';
-    const optsHTML=q.opts.map((o,i)=>{
-      let cls='opt-btn '+OPT_COLORS[i];
-      if(answered){
-        if(i===q.ans) cls='opt-btn correct';
-        else if(i===state.selected&&i!==q.ans) cls='opt-btn wrong';
-      }
-      return `<button class="${cls}" data-i="${i}" ${answered?'disabled':''}><span class="opt-letter">${LETTERS[i]}.</span>${o}</button>`;
-    }).join('');
-    let feedbackHTML='';
-    if(answered&&state.selected!==null){
-      const correct=state.selected===q.ans;
-      feedbackHTML=`<div class="feedback ${correct?'correct':'wrong'}">${correct?`✓ Correct! +${pts} pt${pts>1?'s':''}. `:`✗ Incorrect. -${pts} pt${pts>1?'s':''} from ${t.name}. `}${q.exp}</div>`;
+/* ── Steal trigger ─────────────────────────────────────────────────────── */
+function triggerSteal(){
+  stopTimer();
+  state.phase='steal';
+  state.selected=null;
+  render(); // renders steal UI with 10-sec timer display
+  // now start the steal countdown
+  timerPhase='steal';
+  timerSec=10;
+  updateStealTimerUI();
+  runTimer(10,
+    ()=>updateStealTimerUI(),
+    ()=>{
+      // steal timer expired
+      state.stealResult='expired';
+      state.phase='steal-done';
+      render();
     }
-    return `${scoresHTML}
-      <div class="turn-banner team${state.turn}">🎯 ${t.name} — ${CAT_ICONS[q.cat]} ${CAT_LABELS[q.cat]} (${q.diff} · ${pts} pt${pts>1?'s':''})</div>
-      ${!answered?`
-        <div id="ready-banner" class="ready-banner">📖 Read the question and choices aloud, then click <strong>Start Timer</strong> when ready.</div>
-        <div style="text-align:center;margin-bottom:1rem"><button id="startTimerBtn" class="btn-start-timer">▶ Start Timer</button></div>
-                  <div id="timer-row" class="timer-row" style="display:none">
-          <span id="timer-num" class="timer-num">10</span>
-          <div class="timer-bar-wrap"><div id="timer-bar" class="timer-bar" style="width:100%;background:#534AB7"></div></div>
-        </div>
-        <div id="flash-msg" class="flash-msg warning" style="display:none">⏰ Time is up — please select an answer now!</div>
-      `:''}
-      <div class="q-card">
-        <div class="q-meta">
-          <span class="badge ${catClass[q.cat]}">${CAT_LABELS[q.cat]}</span>
-          <span class="badge ${diffClass[q.diff]}">${q.diff}</span>
-          <span style="font-size:12px;color:var(--color-text-secondary)">Worth ${pts} pt${pts>1?'s':''}</span>
-        </div>
-        <div class="q-text">${q.q}</div>
-        <div class="options">${optsHTML}</div>
-        ${feedbackHTML}
-        ${answered?`<div class="actions"><button class="btn-primary" id="nextBtn">Next turn →</button></div>`:''}
-      </div>`;
-  }
-
-  // PHASE: steal
-  if(state.phase==='steal'||state.phase==='steal-done'){
-    const q=state.currentQ;
-    const catClass={sca:'badge-sca',dba:'badge-dba',state:'badge-state',audit:'badge-audit',gen:'badge-gen'};
-    const diffClass={easy:'badge-easy',med:'badge-med',hard:'badge-hard'};
-    const done=state.phase==='steal-done';
-    const optsHTML=q.opts.map((o,i)=>{
-      let cls='opt-btn '+OPT_COLORS[i];
-      if(done){
-        if(i===q.ans) cls='opt-btn correct';
-        else if(i===state.selected&&i!==q.ans) cls='opt-btn wrong';
-      }
-      return `<button class="${cls}" data-i="${i}" ${done?'disabled':''}><span class="opt-letter">${LETTERS[i]}.</span>${o}</button>`;
-    }).join('');
-    let feedbackHTML='';
-    if(done){
-      if(state.stealResult==='correct') feedbackHTML=`<div class="feedback steal-correct">🔥 Steal! ${other.name} gets 1 point! ${q.exp}</div>`;
-      else if(state.stealResult==='wrong') feedbackHTML=`<div class="feedback no-steal">✗ Steal missed. No points awarded. ${q.exp}</div>`;
-      else feedbackHTML=`<div class="feedback no-steal">⏱ Steal time expired. No points awarded. The correct answer was <strong>${LETTERS[q.ans]}: ${q.opts[q.ans]}</strong>. ${q.exp}</div>`;
-    }
-    return `${scoresHTML}
-      <div class="turn-banner steal">🔥 Steal opportunity — ${other.name}!</div>
-      ${!done?`
-        <div class="steal-banner">⚡ ${other.name} has 5 seconds to steal for 1 point!</div>
-        <div class="timer-row">
-          <span id="timer-num" class="timer-num">${timerSec||10}</span>
-          <div class="timer-bar-wrap"><div id="timer-bar" class="timer-bar" style="width:${Math.round((timerSec/10)*100)}%;background:#D85A30"></div></div>
-        </div>
-      `:''}
-      <div class="q-card">
-        <div class="q-meta">
-          <span class="badge ${catClass[q.cat]}">${CAT_LABELS[q.cat]}</span>
-          <span class="badge ${diffClass[q.diff]}">${q.diff}</span>
-        </div>
-        <div class="q-text">${q.q}</div>
-        <div class="options">${optsHTML}</div>
-        ${feedbackHTML}
-        ${done?`<div class="actions"><button class="btn-primary" id="nextBtn">Next turn →</button></div>`:''}
-      </div>`;
-  }
-
-  return '';
+  );
 }
 
-function winnerHTML(){
-  const [a,b]=state.teams;
-  const winner=a.score>b.score?a:b.score>a.score?b:null;
-  const winnerIdx=a.score>b.score?0:1;
-  const colors=['#534AB7','#0F6E56'];
-  const bg=winner?colors[winnerIdx]:'#534AB7';
-  const confetti=['🎉','🎊','⭐','✨','🏅','🎈','🥇','🌟'];
-  const conf=Array.from({length:24},(_,i)=>{
-    const em=confetti[i%confetti.length];
-    const left=Math.round(Math.random()*100);
-    const delay=(Math.random()*1.8).toFixed(2);
-    const dur=(2+Math.random()*2).toFixed(2);
-    const size=Math.round(18+Math.random()*22);
-    return `<span class="conf-piece" style="left:${left}%;animation-delay:${delay}s;animation-duration:${dur}s;font-size:${size}px">${em}</span>`;
-  }).join('');
-  return `
-  <style>
-    @keyframes drop{0%{top:-60px;opacity:1;transform:rotate(0deg)}100%{top:110%;opacity:0;transform:rotate(720deg)}}
-    @keyframes popIn{0%{transform:scale(0.3);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
-    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-    .conf-piece{position:absolute;top:-60px;animation:drop linear infinite;pointer-events:none}
-    .winner-box{animation:popIn 0.6s cubic-bezier(.17,.89,.32,1.28) forwards}
-    .winner-name{animation:pulse 1.5s ease-in-out infinite}
-  </style>
-  <div style="position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#EEEDFE 0%,#E1F5EE 100%);border-radius:var(--border-radius-lg);padding:2rem 1rem">
-    <div style="position:absolute;inset:0;pointer-events:none">${conf}</div>
-    <div class="winner-box" style="position:relative;text-align:center;z-index:2">
-      <div style="font-size:72px;margin-bottom:8px;line-height:1">${winner?'🏆':'🤝'}</div>
-      ${winner?`
-        <div style="font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:${bg};margin-bottom:6px">We have a winner!</div>
-        <div class="winner-name" style="font-size:36px;font-weight:500;color:${bg};margin-bottom:4px">${winner.name}</div>
-        <div style="font-size:18px;color:${bg};opacity:0.75;margin-bottom:1.25rem">takes the crown! 👑</div>
-      `:`
-        <div style="font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#534AB7;margin-bottom:6px">What a game!</div>
-        <div class="winner-name" style="font-size:34px;font-weight:500;color:#534AB7;margin-bottom:1.25rem">It's a tie! 🤝</div>
-      `}
-      <div style="background:rgba(255,255,255,0.75);border-radius:var(--border-radius-lg);padding:1rem 1.5rem;margin-bottom:1.5rem;display:inline-block">
-        <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:8px;letter-spacing:0.05em;text-transform:uppercase">Final Score</div>
-        <div>
-          <span class="score-pill" style="background:#EEEDFE;color:#3C3489">${a.name} &nbsp;<strong>${a.score}</strong></span>
-          <span style="color:var(--color-text-secondary);font-size:18px;vertical-align:middle">vs</span>
-          <span class="score-pill" style="background:#E1F5EE;color:#085041">${b.name} &nbsp;<strong>${b.score}</strong></span>
-        </div>
-      </div>
-      <br>
-      <button id="restartBtn" style="background:${bg};color:#fff;border:none;border-radius:var(--border-radius-lg);padding:13px 32px;font-size:16px;font-weight:500;cursor:pointer;letter-spacing:0.02em">🎮 Play again</button>
-    </div>
-  </div>`;
-}
-
+/* ── Win check ─────────────────────────────────────────────────────────── */
 function checkWin(){
   for(let i=0;i<2;i++){
     if(state.teams[i].score>=state.goalScore){
@@ -439,22 +275,9 @@ function checkWin(){
   return false;
 }
 
-function triggerSteal(){
-  stopTimer();
-  state.phase='steal';
-  state.selected=null;
-  render();
-  timerPhase='steal';
-  timerSec=10;
-  updateTimerUI();
-  startTimer(10,()=>{
-    state.stealResult='expired';
-    state.phase='steal-done';
-    render();
-  });
-}
-
+/* ── Advance turn ──────────────────────────────────────────────────────── */
 function advanceTurn(){
+  stopTimer();
   state.turn=otherTeam();
   state.phase='pick';
   state.currentQ=null;
@@ -463,23 +286,248 @@ function advanceTurn(){
   timerStarted=false;
 }
 
+/* ── Render ────────────────────────────────────────────────────────────── */
+function render(){
+  document.getElementById('app').innerHTML=
+    state.screen==='setup'?setupHTML():
+    state.screen==='game'?gameHTML():
+    winnerHTML();
+  attachEvents();
+  if(state.screen!=='game') stopTimer();
+}
+
+/* ── Setup screen ──────────────────────────────────────────────────────── */
+function setupHTML(){
+  return `
+  <div style="text-align:center;padding:1.5rem 1rem 0.5rem">
+    <div style="font-size:48px;margin-bottom:8px">🏛️⚖️</div>
+    <h1 style="font-size:24px;font-weight:500;color:#534AB7;margin-bottom:6px">Prevailing Wage Team Trivia</h1>
+    <p style="font-size:14px;color:#555;margin-bottom:1.5rem">Pick your category each turn — answer correctly to score, incorrectly to lose points. Steal available on wrong answers!</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem">
+    <div style="background:#EEEDFE;border-radius:12px;padding:1rem">
+      <div style="font-size:11px;font-weight:500;color:#534AB7;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Team 1</div>
+      <input id="t1" value="${state.teams[0].name}" maxlength="30" style="width:100%;background:#fff;border:1.5px solid #AFA9EC;border-radius:8px;padding:8px 10px;font-size:14px;color:#26215C;font-weight:500"/>
+    </div>
+    <div style="background:#E1F5EE;border-radius:12px;padding:1rem">
+      <div style="font-size:11px;font-weight:500;color:#0F6E56;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Team 2</div>
+      <input id="t2" value="${state.teams[1].name}" maxlength="30" style="width:100%;background:#fff;border:1.5px solid #5DCAA5;border-radius:8px;padding:8px 10px;font-size:14px;color:#04342C;font-weight:500"/>
+    </div>
+  </div>
+  <div style="background:#FAEEDA;border-radius:12px;padding:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:12px">
+    <div style="font-size:24px">🎯</div>
+    <div style="flex:1">
+      <div style="font-size:11px;font-weight:500;color:#BA7517;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Points to win</div>
+      <input id="goal" type="number" min="5" max="100" value="${state.goalScore}" style="width:80px;background:#fff;border:1.5px solid #EF9F27;border-radius:8px;padding:6px 10px;font-size:15px;font-weight:500;color:#412402"/>
+    </div>
+    <div style="font-size:12px;color:#854F0B;max-width:200px;line-height:1.6">
+      Easy = 1pt · Medium = 2pts · Hard = 3pts<br>
+      Wrong answer = points deducted (floor: 0)<br>
+      Steal correct = +1pt
+    </div>
+  </div>
+  <button class="btn-primary" id="startBtn" style="width:100%;padding:12px;font-size:16px;font-weight:500;border-radius:12px;background:#534AB7;border-color:#3C3489;letter-spacing:0.02em">Let's play! 🚀</button>`;
+}
+
+/* ── Game screen ───────────────────────────────────────────────────────── */
+function scoreCards(highlightActive){
+  return `<div class="scores">
+    ${state.teams.map((tm,i)=>`
+      <div class="score-card team${i} ${highlightActive&&state.turn===i?'active':''}">
+        <div class="team-name">${tm.name}</div>
+        <div class="team-label">Score</div>
+        <div class="team-score">${tm.score}</div>
+        <div class="goal-note">Goal: ${state.goalScore} pts</div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function optionsHTML(q,locked){
+  return q.opts.map((o,i)=>{
+    let cls='opt-btn '+OPT_COLORS[i];
+    if(locked){
+      if(i===q.ans) cls='opt-btn correct';
+      else if(i===state.selected&&i!==q.ans) cls='opt-btn wrong';
+    }
+    return `<button class="${cls}" data-i="${i}" ${locked?'disabled':''}><span class="opt-letter">${LETTERS[i]}.</span>${o}</button>`;
+  }).join('');
+}
+
+function gameHTML(){
+  const t=state.teams[state.turn];
+  const other=state.teams[otherTeam()];
+  const catClass={sca:'badge-sca',dba:'badge-dba',state:'badge-state',audit:'badge-audit',gen:'badge-gen'};
+  const diffClass={easy:'badge-easy',med:'badge-med',hard:'badge-hard'};
+
+  /* PICK phase */
+  if(state.phase==='pick'){
+    const catBtns=Object.keys(CAT_LABELS).map(c=>{
+      const rem=catRemaining(c);
+      const dep=rem===0;
+      return `<button class="cat-btn ${c}" data-cat="${c}" ${dep?'disabled':''}>
+        <span style="font-size:22px">${CAT_ICONS[c]}</span><br>
+        ${CAT_LABELS[c]}
+        <span class="cat-depleted">${dep?'All done':rem+' left'}</span>
+      </button>`;
+    }).join('');
+    return `${scoreCards(true)}
+      <div class="turn-banner team${state.turn}">🎯 ${t.name} — pick a category!</div>
+      <div class="cat-grid">${catBtns}</div>`;
+  }
+
+  /* READ / ANSWERED phase */
+  if(state.phase==='read'||state.phase==='answered'){
+    const q=state.currentQ;
+    const pts=DIFF_PTS[q.diff];
+    const answered=state.phase==='answered';
+    let feedbackHTML='';
+    if(answered&&state.selected!==null){
+      const correct=state.selected===q.ans;
+      feedbackHTML=`<div class="feedback ${correct?'correct':'wrong'}">
+        ${correct?`✓ Correct! +${pts} pt${pts>1?'s':''}.`:`✗ Incorrect. −${pts} pt${pts>1?'s':''} from ${t.name}.`}
+        ${q.exp}
+      </div>`;
+    }
+    return `${scoreCards(!answered)}
+      <div class="turn-banner team${state.turn}">🎯 ${t.name} — ${CAT_ICONS[q.cat]} ${CAT_LABELS[q.cat]} (${q.diff} · ${pts} pt${pts>1?'s':''})</div>
+      ${!answered?`
+        <div id="ready-banner" class="ready-banner">📖 Read the question and choices aloud, then click <strong>Start Timer</strong> when ready.</div>
+        <div style="text-align:center;margin-bottom:1rem">
+          <button id="startTimerBtn" class="btn-start-timer">▶ Start Timer</button>
+        </div>
+        <!-- Timer row: hidden until Start Timer clicked -->
+        <div id="timer-row" class="timer-row" style="display:none">
+          <span id="timer-num" class="timer-num">10</span>
+          <div class="timer-bar-wrap"><div id="timer-bar" class="timer-bar" style="width:100%;background:#534AB7"></div></div>
+        </div>
+        <!-- Grace period flash: hidden until 10s expire -->
+        <div id="flash-msg" class="flash-msg warning" style="display:none">⏰ Time is up — please select an answer now! (5 seconds remaining)</div>
+      `:''}
+      <div class="q-card">
+        <div class="q-meta">
+          <span class="badge ${catClass[q.cat]}">${CAT_LABELS[q.cat]}</span>
+          <span class="badge ${diffClass[q.diff]}">${q.diff}</span>
+          <span style="font-size:12px;color:#666">Worth ${pts} pt${pts>1?'s':''}</span>
+        </div>
+        <div class="q-text">${q.q}</div>
+        <div class="options">${optionsHTML(q,answered)}</div>
+        ${feedbackHTML}
+        ${answered?`<div class="actions"><button class="btn-primary" id="nextBtn">Next turn →</button></div>`:''}
+      </div>`;
+  }
+
+  /* STEAL / STEAL-DONE phase */
+  if(state.phase==='steal'||state.phase==='steal-done'){
+    const q=state.currentQ;
+    const pts=DIFF_PTS[q.diff];
+    const done=state.phase==='steal-done';
+    let feedbackHTML='';
+    if(done){
+      if(state.stealResult==='correct')
+        feedbackHTML=`<div class="feedback steal-correct">🔥 Steal! ${other.name} gets 1 point! ${q.exp}</div>`;
+      else if(state.stealResult==='wrong')
+        feedbackHTML=`<div class="feedback no-steal">✗ Steal missed. No points awarded. ${q.exp}</div>`;
+      else
+        feedbackHTML=`<div class="feedback no-steal">⏱ Steal time expired. No points awarded. Correct answer: <strong>${LETTERS[q.ans]}: ${q.opts[q.ans]}</strong>. ${q.exp}</div>`;
+    }
+    return `${scoreCards(false)}
+      <div class="turn-banner steal">🔥 Steal opportunity — ${other.name}!</div>
+      ${!done?`
+        <div class="steal-banner">⚡ ${other.name} has 10 seconds to steal for 1 point!</div>
+        <div class="timer-row">
+          <span id="timer-num" class="timer-num">${timerSec}</span>
+          <div class="timer-bar-wrap">
+            <div id="timer-bar" class="timer-bar" style="width:${Math.max(0,Math.round((timerSec/10)*100))}%;background:#D85A30"></div>
+          </div>
+        </div>
+      `:''}
+      <div class="q-card">
+        <div class="q-meta">
+          <span class="badge ${catClass[q.cat]}">${CAT_LABELS[q.cat]}</span>
+          <span class="badge ${diffClass[q.diff]}">${q.diff}</span>
+          <span style="font-size:12px;color:#666">Steal worth 1 pt</span>
+        </div>
+        <div class="q-text">${q.q}</div>
+        <div class="options">${optionsHTML(q,done)}</div>
+        ${feedbackHTML}
+        ${done?`<div class="actions"><button class="btn-primary" id="nextBtn">Next turn →</button></div>`:''}
+      </div>`;
+  }
+
+  return '';
+}
+
+/* ── Winner screen ─────────────────────────────────────────────────────── */
+function winnerHTML(){
+  const [a,b]=state.teams;
+  const winner=a.score>b.score?a:b.score>a.score?b:null;
+  const winnerIdx=a.score>b.score?0:1;
+  const bg=winner?(['#534AB7','#0F6E56'][winnerIdx]):'#534AB7';
+  const confetti=['🎉','🎊','⭐','✨','🏅','🎈','🥇','🌟'];
+  const conf=Array.from({length:24},(_,i)=>{
+    const em=confetti[i%confetti.length];
+    const left=Math.round(Math.random()*100);
+    const delay=(Math.random()*1.8).toFixed(2);
+    const dur=(2+Math.random()*2).toFixed(2);
+    const size=Math.round(18+Math.random()*22);
+    return `<span style="position:absolute;top:-60px;left:${left}%;font-size:${size}px;animation:drop ${dur}s ${delay}s linear infinite">${em}</span>`;
+  }).join('');
+  return `
+  <style>
+    @keyframes drop{0%{top:-60px;opacity:1;transform:rotate(0deg)}100%{top:110%;opacity:0;transform:rotate(720deg)}}
+    @keyframes popIn{0%{transform:scale(0.3);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  </style>
+  <div style="position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#EEEDFE 0%,#E1F5EE 100%);border-radius:12px;padding:2rem 1rem">
+    <div style="position:absolute;inset:0;pointer-events:none">${conf}</div>
+    <div style="position:relative;text-align:center;z-index:2;animation:popIn 0.6s cubic-bezier(.17,.89,.32,1.28) forwards">
+      <div style="font-size:72px;margin-bottom:8px;line-height:1">${winner?'🏆':'🤝'}</div>
+      ${winner?`
+        <div style="font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:${bg};margin-bottom:6px">We have a winner!</div>
+        <div style="font-size:36px;font-weight:500;color:${bg};margin-bottom:4px;animation:pulse 1.5s ease-in-out infinite">${winner.name}</div>
+        <div style="font-size:18px;color:${bg};opacity:0.75;margin-bottom:1.25rem">takes the crown! 👑</div>
+      `:`
+        <div style="font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#534AB7;margin-bottom:6px">What a game!</div>
+        <div style="font-size:34px;font-weight:500;color:#534AB7;margin-bottom:1.25rem;animation:pulse 1.5s ease-in-out infinite">It's a tie! 🤝</div>
+      `}
+      <div style="background:rgba(255,255,255,0.75);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:inline-block">
+        <div style="font-size:12px;color:#555;margin-bottom:8px;letter-spacing:0.05em;text-transform:uppercase">Final Score</div>
+        <div>
+          <span class="score-pill" style="background:#EEEDFE;color:#3C3489">${a.name} &nbsp;<strong>${a.score}</strong></span>
+          <span style="color:#555;font-size:18px;vertical-align:middle">vs</span>
+          <span class="score-pill" style="background:#E1F5EE;color:#085041">${b.name} &nbsp;<strong>${b.score}</strong></span>
+        </div>
+      </div>
+      <br>
+      <button id="restartBtn" style="background:${bg};color:#fff;border:none;border-radius:12px;padding:13px 32px;font-size:16px;font-weight:500;cursor:pointer">🎮 Play again</button>
+    </div>
+  </div>`;
+}
+
+/* ── Event handlers ────────────────────────────────────────────────────── */
 function attachEvents(){
-  // Setup
+  /* Setup → start game */
   const startBtn=document.getElementById('startBtn');
   if(startBtn){
     startBtn.onclick=()=>{
-      state.teams[0].name=document.getElementById('t1').value||'Team A';
-      state.teams[1].name=document.getElementById('t2').value||'Team B';
-      state.goalScore=parseInt(document.getElementById('goal').value)||15;
-      state.teams[0].score=0;state.teams[1].score=0;
+      state.teams[0].name=document.getElementById('t1').value.trim()||'Team A';
+      state.teams[1].name=document.getElementById('t2').value.trim()||'Team B';
+      state.goalScore=Math.max(5,parseInt(document.getElementById('goal').value)||15);
+      state.teams[0].score=0;
+      state.teams[1].score=0;
       state.usedIds=new Set();
-      state.turn=0;state.phase='pick';state.currentQ=null;state.selected=null;
-      state.screen='game';timerStarted=false;
+      state.turn=0;
+      state.phase='pick';
+      state.currentQ=null;
+      state.selected=null;
+      state.stealResult=null;
+      state.screen='game';
+      timerStarted=false;
       render();
     };
   }
 
-  // Category pick
+  /* Category pick */
   document.querySelectorAll('.cat-btn').forEach(btn=>{
     btn.onclick=()=>{
       const cat=btn.dataset.cat;
@@ -494,7 +542,7 @@ function attachEvents(){
     };
   });
 
-  // Start timer
+  /* Start Timer button — begins 10s main window */
   const startTimerBtn=document.getElementById('startTimerBtn');
   if(startTimerBtn){
     startTimerBtn.onclick=()=>{
@@ -502,26 +550,34 @@ function attachEvents(){
       timerStarted=true;
       document.getElementById('startTimerBtn').style.display='none';
       document.getElementById('ready-banner').style.display='none';
-      document.getElementById('timer-row').style.display='flex';
-      timerPhase='main';timerSec=10;
-      updateTimerUI();
-      startTimer(10,()=>{
-        // main time up — show grace flash, start 5s grace period
-        const flash=document.getElementById('flash-msg');
-        if(flash) flash.style.display='block';
-        timerPhase='grace';timerSec=5;
-        updateTimerUI();
-        const row=document.getElementById('timer-row');
-        if(row) row.style.display='flex';
-        startTimer(5,()=>{
-          // grace expired — trigger steal
-          triggerSteal();
-        });
-      });
+      const row=document.getElementById('timer-row');
+      if(row) row.style.display='flex';
+      // Phase 1: 10-second main window
+      timerPhase='main';
+      timerSec=10;
+      updateMainTimerUI();
+      runTimer(10,
+        ()=>updateMainTimerUI(),
+        ()=>{
+          // Main window expired — show grace flash, start 5s grace period
+          const flash=document.getElementById('flash-msg');
+          if(flash) flash.style.display='block';
+          timerPhase='grace';
+          timerSec=5;
+          updateMainTimerUI();
+          runTimer(5,
+            ()=>updateMainTimerUI(),
+            ()=>{
+              // Grace expired — auto-trigger steal
+              triggerSteal();
+            }
+          );
+        }
+      );
     };
   }
 
-  // Answer buttons (main turn)
+  /* Answer buttons — main turn (read phase) */
   if(state.phase==='read'){
     document.querySelectorAll('.opt-btn').forEach(btn=>{
       btn.onclick=()=>{
@@ -532,22 +588,23 @@ function attachEvents(){
         const q=state.currentQ;
         const pts=DIFF_PTS[q.diff];
         if(i===q.ans){
+          // Correct
           state.teams[state.turn].score+=pts;
           state.phase='answered';
           render();
           checkWin();
         } else {
+          // Wrong — deduct, show result, then trigger steal
           state.teams[state.turn].score=Math.max(0,state.teams[state.turn].score-pts);
           state.phase='answered';
           render();
-          // Trigger steal after a moment
           setTimeout(()=>triggerSteal(),1800);
         }
       };
     });
   }
 
-  // Answer buttons (steal turn)
+  /* Answer buttons — steal phase */
   if(state.phase==='steal'){
     document.querySelectorAll('.opt-btn').forEach(btn=>{
       btn.onclick=()=>{
@@ -571,7 +628,7 @@ function attachEvents(){
     });
   }
 
-  // Next turn
+  /* Next turn */
   const nextBtn=document.getElementById('nextBtn');
   if(nextBtn){
     nextBtn.onclick=()=>{
@@ -580,16 +637,29 @@ function attachEvents(){
     };
   }
 
-  // Restart
+  /* Play again */
   const restartBtn=document.getElementById('restartBtn');
   if(restartBtn){
     restartBtn.onclick=()=>{
       stopTimer();
-      state={screen:'setup',teams:[{name:'Team A',score:0},{name:'Team B',score:0}],usedIds:new Set(),catCounts:{sca:0,dba:0,state:0,audit:0,gen:0},currentQ:null,current:0,turn:0,selected:null,phase:'pick',stealResult:null,goalScore:15};
-      timerStarted=false;render();
+      state={
+        screen:'setup',
+        teams:[{name:'Team A',score:0},{name:'Team B',score:0}],
+        usedIds:new Set(),
+        currentQ:null,
+        turn:0,
+        phase:'pick',
+        selected:null,
+        stealResult:null,
+        goalScore:15,
+      };
+      timerStarted=false;
+      render();
     };
   }
 }
 
 render();
 </script>
+</body>
+</html>
