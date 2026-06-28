@@ -588,17 +588,15 @@ function attachEvents(){
         const q=state.currentQ;
         const pts=DIFF_PTS[q.diff];
         if(i===q.ans){
-          // Correct
+          // Correct — show answered state with result
           state.teams[state.turn].score+=pts;
           state.phase='answered';
           render();
           checkWin();
         } else {
-          // Wrong — deduct, show result, then trigger steal
+          // Wrong — deduct points, go straight to steal (no answer reveal)
           state.teams[state.turn].score=Math.max(0,state.teams[state.turn].score-pts);
-          state.phase='answered';
-          render();
-          setTimeout(()=>triggerSteal(),1800);
+          triggerSteal();
         }
       };
     });
